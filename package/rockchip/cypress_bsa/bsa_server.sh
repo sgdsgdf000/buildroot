@@ -11,7 +11,8 @@ case "$1" in
     echo 1 > /sys/class/rfkill/rfkill0/state
     sleep 3
 
-    mkdir -p /data/bsa/config
+    mkdir -p /data/bsa/config/test_files/av
+    cp /etc/bsa_file/* /data/bsa/config/test_files/av/
     cd /data/bsa/config
     echo "start broadcom bluetooth server bsa_sever"
     killall bsa_server
