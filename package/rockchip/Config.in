@@ -176,4 +176,5 @@ source "package/rockchip/libavb_ab/Config.in"
 source "package/rockchip/libavb_user/Config.in"
 source "package/rockchip/bootcontrol/Config.in"
 source "package/rockchip/LinuxAB/Config.in"
+source "package/rockchip/rk_webui/Config.in"
 endif
