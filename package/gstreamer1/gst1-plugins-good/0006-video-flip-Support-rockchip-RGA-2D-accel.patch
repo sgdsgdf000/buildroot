@@ -1,41 +1,49 @@
-From 92dccc15e60669fde64e0c8671f2134afb9d6f71 Mon Sep 17 00:00:00 2001
+From d3fad51e4d388e06b2ec93cd8477220d6e327c6d Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Fri, 8 Nov 2019 17:36:20 +0800
-Subject: [PATCH] video-flip: Support rockchip RGA 2D accel
+Subject: [PATCH 6/6] video-flip: Support rockchip RGA 2D accel
 
 Disabled by default, set env GST_VIDEO_FLIP_USE_RGA=1 to enable.
 
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- configure.ac                   |  12 ++
+ configure.ac                   |   6 +
+ gst/videofilter/Makefile.am    |   2 +-
  gst/videofilter/gstvideoflip.c | 204 +++++++++++++++++++++++++++++++++
- 2 files changed, 216 insertions(+)
+ 3 files changed, 211 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index deb74f1..ba8f7f5 100644
+index deb74f1..3dc0718 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -293,6 +293,18 @@ AC_SUBST(GLIB_PREFIX)
+@@ -293,6 +293,12 @@ AC_SUBST(GLIB_PREFIX)
  AC_SUBST(GST_PREFIX)
  AC_SUBST(GSTPB_PREFIX)
  
 +dnl check for rockchip RGA
-+RGA_LIBS=
-+RGA_HEADER=
-+
-+AC_CHECK_LIB([rga], [c_RkRgaInit], RGA_LIBS="-lrga")
-+AC_CHECK_HEADERS([rga/RgaApi.h], RGA_HEADER="yes")
-+
-+if test "x$RGA_LIBS" != "x" && test "x$RGA_HEADER" = "xyes"; then
-+  AC_SUBST(RGA_LIBS)
-+  AC_DEFINE(HAVE_RGA, 1, [Have rockchip RGA])
-+fi
++PKG_CHECK_MODULES(RGA, [librga], [enable_rga=yes], [enable_rga=no])
++AC_DEFINE(HAVE_RGA, 1, [test "x$enable_rga" = xyes])
++AC_SUBST(RGA_CFLAGS)
++AC_SUBST(RGA_LIBS)
 +
  dnl GTK is optional and used in examples
  HAVE_GTK=no
  GTK_REQ=3.0.0
+diff --git a/gst/videofilter/Makefile.am b/gst/videofilter/Makefile.am
+index cb517fe..daf6721 100644
+--- a/gst/videofilter/Makefile.am
++++ b/gst/videofilter/Makefile.am
+@@ -15,7 +15,7 @@ libgstvideofilter_la_CFLAGS = $(GST_CFLAGS) \
+ 			$(GST_PLUGINS_BASE_CFLAGS)
+ libgstvideofilter_la_LIBADD = $(GST_PLUGINS_BASE_LIBS) \
+ 			-lgstvideo-@GST_API_VERSION@ \
+-			$(GST_BASE_LIBS) $(GST_LIBS)
++			$(GST_BASE_LIBS) $(GST_LIBS) $(RGA_LIBS)
+ libgstvideofilter_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS) $(LIBM)
+ 
+ gstvideoexample.c: $(srcdir)/make_filter $(srcdir)/gstvideotemplate.c
 diff --git a/gst/videofilter/gstvideoflip.c b/gst/videofilter/gstvideoflip.c
-index c6132f5..43ea033 100644
+index c6132f5..323e74c 100644
 --- a/gst/videofilter/gstvideoflip.c
 +++ b/gst/videofilter/gstvideoflip.c
 @@ -48,6 +48,11 @@
