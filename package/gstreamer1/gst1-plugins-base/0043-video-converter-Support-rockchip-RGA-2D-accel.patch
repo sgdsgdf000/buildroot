@@ -22,7 +22,7 @@ index 1287583..17e3697 100644
  
 +dnl check for rockchip RGA
 +PKG_CHECK_MODULES(RGA, [librga], [enable_rga=yes], [enable_rga=no])
-+AC_DEFINE(HAVE_RGA, 1, [test "x$enable_rga" = xyes])
++AM_CONDITIONAL(HAVE_RGA, test "x$enable_rga" = xyes)
 +AC_SUBST(RGA_CFLAGS)
 +AC_SUBST(RGA_LIBS)
 +
