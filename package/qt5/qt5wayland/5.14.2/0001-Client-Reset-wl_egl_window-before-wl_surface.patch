@@ -1,7 +1,7 @@
 From 08d59626383c27ad57c8d6a95622c87e1688a3ab Mon Sep 17 00:00:00 2001
 From: David Edmundson <davidedmundson@kde.org>
 Date: Wed, 8 Apr 2020 18:19:00 +0100
-Subject: [PATCH 01/15] Client: Reset wl_egl_window before wl_surface
+Subject: [PATCH 01/16] Client: Reset wl_egl_window before wl_surface
 
 Semantically we want things in this order as wl_egl_window_create takes
 a reference to the wl_surface. Teardown typically is the opposite of
@@ -24,7 +24,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  3 files changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/src/client/qwaylandwindow.cpp b/src/client/qwaylandwindow.cpp
-index 0df99d9f..f1d456fe 100644
+index 0df99d9fe..f1d456fe1 100644
 --- a/src/client/qwaylandwindow.cpp
 +++ b/src/client/qwaylandwindow.cpp
 @@ -244,6 +244,8 @@ void QWaylandWindow::reset(bool sendDestroyEvent)
@@ -37,7 +37,7 @@ index 0df99d9f..f1d456fe 100644
          emit wlSurfaceDestroyed();
          QWriteLocker lock(&mSurfaceLock);
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
-index 030422c5..91643d56 100644
+index 030422c56..91643d565 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.cpp
 @@ -162,13 +162,6 @@ QSurfaceFormat QWaylandEglWindow::format() const
@@ -55,7 +55,7 @@ index 030422c5..91643d56 100644
  {
      if (m_eglSurface) {
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
-index 9e6cb876..0d8de84d 100644
+index 9e6cb876c..0d8de84d1 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandeglwindow.h
 @@ -75,7 +75,6 @@ public:

@@ -1,7 +1,7 @@
-From 85fe9df7ab9f5c67003670251648036e683e93f3 Mon Sep 17 00:00:00 2001
+From 53aee20e85c42fd81c82b5c1514b79896c4be841 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Wed, 28 Nov 2018 17:04:59 +0800
-Subject: [PATCH 03/15] qwaylanddisplay: Refactor flushRequests() for multiple
+Subject: [PATCH 04/16] qwaylanddisplay: Refactor flushRequests() for multiple
  readers
 
 Cancel reading when no events polled, since the other clients, e.g.
@@ -13,7 +13,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/src/client/qwaylanddisplay.cpp b/src/client/qwaylanddisplay.cpp
-index 0464d3a4..38ae52fd 100644
+index 0464d3a42..38ae52fd1 100644
 --- a/src/client/qwaylanddisplay.cpp
 +++ b/src/client/qwaylanddisplay.cpp
 @@ -83,6 +83,7 @@

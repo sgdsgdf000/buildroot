@@ -1,7 +1,7 @@
-From e3a88e6d81aab9a5b19f9a9a05ea1c9b29f1fce2 Mon Sep 17 00:00:00 2001
+From 1441c188b65086133bdd77551376d8a2cbadb31d Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Mon, 15 Jun 2020 16:48:42 +0800
-Subject: [PATCH 02/15] Revert "Use a dedicated EGLContext for the decorations
+Subject: [PATCH 03/16] Revert "Use a dedicated EGLContext for the decorations
  blitter"
 
 This reverts commit 7a69fc27a7cb5c5e9c70c1c56e534e6e59b46696.
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  2 files changed, 148 insertions(+), 59 deletions(-)
 
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
-index 7679a5fb..2f6040ee 100644
+index 7679a5fb3..2f6040eef 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.cpp
 @@ -56,7 +56,6 @@
@@ -323,7 +323,7 @@ index 7679a5fb..2f6040ee 100644
  }
  
 diff --git a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.h b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.h
-index 0e86ca4f..0391bb26 100644
+index 0e86ca4f5..0391bb267 100644
 --- a/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.h
 +++ b/src/hardwareintegration/client/wayland-egl/qwaylandglcontext.h
 @@ -87,12 +87,14 @@ private:
