@@ -2,7 +2,7 @@ RKADK_SITE = $(TOPDIR)/../external/rkadk
 RKADK_SITE_METHOD = local
 RKADK_INSTALL_STAGING = YES
 
-RKADK_DEPENDENCIES += rkmedia rockit
+RKADK_DEPENDENCIES += rkmedia rockit iniparser
 
 ifeq ($(BR2_PACKAGE_RKMEDIA_USE_AIQ), y)
 RKADK_DEPENDENCIES += camera_engine_rkaiq
