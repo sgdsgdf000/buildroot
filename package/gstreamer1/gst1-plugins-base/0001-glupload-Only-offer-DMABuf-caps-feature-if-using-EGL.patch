@@ -1,4 +1,4 @@
-From 0f5cb1d469f781e028d0283678ebdccc87533bc9 Mon Sep 17 00:00:00 2001
+From 77e08ee1a93cf6d5f5ce21a1c085c3c0d98f5767 Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Tue, 17 Jul 2018 11:43:40 -0400
 Subject: [PATCH 01/45] glupload: Only offer DMABuf caps feature if using EGL
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 9 insertions(+)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index fa4884a322..1432cf7c1c 100644
+index fa4884a..1432cf7 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -514,6 +514,15 @@ _dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
@@ -35,5 +35,5 @@ index fa4884a322..1432cf7c1c 100644
      GstCaps *tmp;
  
 -- 
-2.11.0
+2.20.1
 

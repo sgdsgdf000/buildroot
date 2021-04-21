@@ -1,4 +1,4 @@
-From 4de2fde3eae932430c3bc24e2eb3130cb9cc6c3d Mon Sep 17 00:00:00 2001
+From 1b386e74e3d6449fdb67ae34f73eff3d058550f8 Mon Sep 17 00:00:00 2001
 From: Jonas Larsson <ljonas@google.com>
 Date: Wed, 28 Aug 2019 11:24:01 -0700
 Subject: [PATCH 32/45] eglimage: Fix memory leak
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 7fad6b5d34..17afe044de 100644
+index 7fad6b5..17afe04 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -143,6 +143,8 @@ _gst_egl_image_free (GstMiniObject * object)
@@ -27,5 +27,5 @@ index 7fad6b5d34..17afe044de 100644
  
  static GstMiniObject *
 -- 
-2.11.0
+2.20.1
 

@@ -1,4 +1,4 @@
-From 6ad7ef58a75b3600115dfda30eb45ca502391a08 Mon Sep 17 00:00:00 2001
+From 96bdda80e6131d9c7dd2ab732bfb5ddba1dd4d34 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Thu, 31 Oct 2019 18:45:19 +0800
 Subject: [PATCH 43/45] video-converter: Support rockchip RGA 2D accel
@@ -13,7 +13,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  3 files changed, 190 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 1287583..17e3697 100644
+index 1287583..7804f3b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -310,6 +310,12 @@ PKG_CHECK_MODULES(G_UDEV, gudev-1.0 , [
@@ -43,7 +43,7 @@ index 9fc1ccf..5006854 100644
  
  include $(top_srcdir)/common/gst-glib-gen.mak
 diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
-index e2cb3d5..2f2dd2d 100644
+index 147ca0b..7becd9f 100644
 --- a/gst-libs/gst/video/video-converter.c
 +++ b/gst-libs/gst/video/video-converter.c
 @@ -37,6 +37,11 @@
@@ -96,7 +96,7 @@ index e2cb3d5..2f2dd2d 100644
 +      return RK_FORMAT_YCrCb_422_SP;
 +    case GST_VIDEO_FORMAT_Y42B:
 +      return RK_FORMAT_YCbCr_422_P;
-+    case GST_VIDEO_FORMAT_P010_10LE:
++    case GST_VIDEO_FORMAT_NV12_10LE40:
 +      return RK_FORMAT_YCbCr_420_SP_10B;
 +    default:
 +      return RK_FORMAT_UNKNOWN;

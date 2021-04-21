@@ -1,4 +1,4 @@
-From 64ee12ccf24fda7afa9e564d05069aa92b0ea988 Mon Sep 17 00:00:00 2001
+From 355c33d9819b66af3c5fb8468677a130703e9238 Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Thu, 13 Feb 2020 10:28:40 +0100
 Subject: [PATCH 34/45] gl/egl: support direct dmabuf import with external-oes
@@ -16,13 +16,13 @@ DMA buffers.
 (cherry picked from commit 359e361881ba7b24633f17f0b96f3ac99d527fdd)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/egl/gsteglimage.c    | 44 +++++++++++++++++++++++++++++++-----
- gst-libs/gst/gl/egl/gsteglimage.h    |  6 +++++
- gst-libs/gst/gl/egl/gstglmemoryegl.c | 12 ++++++----
+ gst-libs/gst/gl/egl/gsteglimage.c    | 44 ++++++++++++++++++++++++----
+ gst-libs/gst/gl/egl/gsteglimage.h    |  6 ++++
+ gst-libs/gst/gl/egl/gstglmemoryegl.c | 12 +++++---
  3 files changed, 52 insertions(+), 10 deletions(-)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 17afe044de..3bc8a0248d 100644
+index 17afe04..3bc8a02 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -590,7 +590,8 @@ _drm_direct_fourcc_from_info (GstVideoInfo * info)
@@ -118,7 +118,7 @@ index 17afe044de..3bc8a0248d 100644
  gst_egl_image_export_dmabuf (GstEGLImage * image, int *fd, gint * stride,
      gsize * offset)
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.h b/gst-libs/gst/gl/egl/gsteglimage.h
-index ec08c3bfca..b5d469da14 100644
+index ec08c3b..b5d469d 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.h
 +++ b/gst-libs/gst/gl/egl/gsteglimage.h
 @@ -93,6 +93,12 @@ GstEGLImage *           gst_egl_image_from_dmabuf_direct        (GstGLContext *
@@ -135,7 +135,7 @@ index ec08c3bfca..b5d469da14 100644
  GST_GL_API
  gboolean                gst_egl_image_export_dmabuf             (GstEGLImage *image, int *fd, gint *stride, gsize *offset);
 diff --git a/gst-libs/gst/gl/egl/gstglmemoryegl.c b/gst-libs/gst/gl/egl/gstglmemoryegl.c
-index 1f461149de..612edc4796 100644
+index 1f46114..612edc4 100644
 --- a/gst-libs/gst/gl/egl/gstglmemoryegl.c
 +++ b/gst-libs/gst/gl/egl/gstglmemoryegl.c
 @@ -146,12 +146,14 @@ _gl_mem_egl_alloc (GstGLBaseMemoryAllocator * allocator,
@@ -170,5 +170,5 @@ index 1f461149de..612edc4796 100644
    }
  
 -- 
-2.11.0
+2.20.1
 

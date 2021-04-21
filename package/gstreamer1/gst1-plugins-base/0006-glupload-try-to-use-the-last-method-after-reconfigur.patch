@@ -1,4 +1,4 @@
-From e7040604fa5deae98d6813badc46892329d67530 Mon Sep 17 00:00:00 2001
+From b9be9985cd17d68ddb674ab50fe901029cc7f017 Mon Sep 17 00:00:00 2001
 From: Michael Olbrich <m.olbrich@pengutronix.de>
 Date: Wed, 4 Jul 2018 09:17:11 +0200
 Subject: [PATCH 06/45] glupload: try to use the last method after reconfigure
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 27 insertions(+), 5 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 1432cf7c1c..aa38a41814 100644
+index 1432cf7..aa38a41 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -111,6 +111,9 @@ struct _GstGLUploadPrivate
@@ -98,5 +98,5 @@ index 1432cf7c1c..aa38a41814 100644
  
    return ret;
 -- 
-2.11.0
+2.20.1
 

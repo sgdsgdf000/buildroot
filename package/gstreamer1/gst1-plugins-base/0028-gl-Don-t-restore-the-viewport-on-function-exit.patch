@@ -1,4 +1,4 @@
-From 8641de0d2d1b5992c0fdbfd27d9158da217f5e3c Mon Sep 17 00:00:00 2001
+From e0e7f341a070806371607f9e5a64626406448436 Mon Sep 17 00:00:00 2001
 From: Matthew Waters <matthew@centricular.com>
 Date: Tue, 5 Mar 2019 16:13:15 +1100
 Subject: [PATCH 28/45] gl: Don't restore the viewport on function exit
@@ -13,20 +13,20 @@ In the process, fix resizing on cocoa.
 (cherry picked from commit 6a37bf9bb91e329464a5c5349d2dd5e88bd95b54)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- ext/gl/gstglimagesink.c                         | 14 +++++++++
- gst-libs/gst/gl/cocoa/gstglcaopengllayer.m      | 10 ++++++-
- gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m       | 40 ++++++++++++++++++++-----
- gst-libs/gst/gl/gstglcolorconvert.c             |  7 -----
- gst-libs/gst/gl/gstglframebuffer.c              |  4 ---
- gst-libs/gst/gl/gstglviewconvert.c              |  4 ---
- gst-libs/gst/gl/gstglwindow.c                   | 14 +++++++++
- gst-libs/gst/gl/gstglwindow.h                   |  7 ++++-
- gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.c | 21 ++++++++++---
- gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.h |  1 +
+ ext/gl/gstglimagesink.c                       | 14 +++++++
+ gst-libs/gst/gl/cocoa/gstglcaopengllayer.m    | 10 ++++-
+ gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m     | 40 +++++++++++++++----
+ gst-libs/gst/gl/gstglcolorconvert.c           |  7 ----
+ gst-libs/gst/gl/gstglframebuffer.c            |  4 --
+ gst-libs/gst/gl/gstglviewconvert.c            |  4 --
+ gst-libs/gst/gl/gstglwindow.c                 | 14 +++++++
+ gst-libs/gst/gl/gstglwindow.h                 |  7 +++-
+ .../gst/gl/viv-fb/gstglwindow_viv_fb_egl.c    | 21 ++++++++--
+ .../gst/gl/viv-fb/gstglwindow_viv_fb_egl.h    |  1 +
  10 files changed, 93 insertions(+), 29 deletions(-)
 
 diff --git a/ext/gl/gstglimagesink.c b/ext/gl/gstglimagesink.c
-index 43653bbe57..4a7f70f8b5 100644
+index 43653bb..4a7f70f 100644
 --- a/ext/gl/gstglimagesink.c
 +++ b/ext/gl/gstglimagesink.c
 @@ -2166,6 +2166,16 @@ gst_glimage_sink_on_resize (GstGLImageSink * gl_sink, gint width, gint height)
@@ -58,7 +58,7 @@ index 43653bbe57..4a7f70f8b5 100644
        gl_sink->out_caps, &GST_BASE_SINK (gl_sink)->segment, NULL);
    g_signal_emit (gl_sink, gst_glimage_sink_signals[CLIENT_DRAW_SIGNAL], 0,
 diff --git a/gst-libs/gst/gl/cocoa/gstglcaopengllayer.m b/gst-libs/gst/gl/cocoa/gstglcaopengllayer.m
-index 065d596de7..254a3f21f4 100644
+index 065d596..254a3f2 100644
 --- a/gst-libs/gst/gl/cocoa/gstglcaopengllayer.m
 +++ b/gst-libs/gst/gl/cocoa/gstglcaopengllayer.m
 @@ -206,15 +206,21 @@ _context_ready (gpointer data)
@@ -94,7 +94,7 @@ index 065d596de7..254a3f21f4 100644
  
    if (self->draw_cb)
 diff --git a/gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m b/gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m
-index 1aecf09c16..d9e9651bb0 100644
+index 1aecf09..d9e9651 100644
 --- a/gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m
 +++ b/gst-libs/gst/gl/cocoa/gstglwindow_cocoa.m
 @@ -88,6 +88,8 @@ static void gst_gl_window_cocoa_send_message_async (GstGLWindow * window,
@@ -188,7 +188,7 @@ index 1aecf09c16..d9e9651bb0 100644
  /*                                                              */
  /*                    GstGLNSWindow implementation              */
 diff --git a/gst-libs/gst/gl/gstglcolorconvert.c b/gst-libs/gst/gl/gstglcolorconvert.c
-index 60d9653a5a..d293c50870 100644
+index 60d9653..d293c50 100644
 --- a/gst-libs/gst/gl/gstglcolorconvert.c
 +++ b/gst-libs/gst/gl/gstglcolorconvert.c
 @@ -2468,8 +2468,6 @@ _do_convert_draw (GstGLContext * context, GstGLColorConvert * convert)
@@ -220,7 +220,7 @@ index 60d9653a5a..d293c50870 100644
      ret = FALSE;
  
 diff --git a/gst-libs/gst/gl/gstglframebuffer.c b/gst-libs/gst/gl/gstglframebuffer.c
-index b1d64b288c..88b3aab385 100644
+index b1d64b2..88b3aab 100644
 --- a/gst-libs/gst/gl/gstglframebuffer.c
 +++ b/gst-libs/gst/gl/gstglframebuffer.c
 @@ -274,7 +274,6 @@ gboolean
@@ -249,7 +249,7 @@ index b1d64b288c..88b3aab385 100644
  
    return ret;
 diff --git a/gst-libs/gst/gl/gstglviewconvert.c b/gst-libs/gst/gl/gstglviewconvert.c
-index 9c0dc44d6b..35dc0aed3a 100644
+index 9c0dc44..35dc0ae 100644
 --- a/gst-libs/gst/gl/gstglviewconvert.c
 +++ b/gst-libs/gst/gl/gstglviewconvert.c
 @@ -1877,7 +1877,6 @@ _do_view_convert_draw (GstGLContext * context, GstGLViewConvert * viewconvert)
@@ -278,7 +278,7 @@ index 9c0dc44d6b..35dc0aed3a 100644
  
    return TRUE;
 diff --git a/gst-libs/gst/gl/gstglwindow.c b/gst-libs/gst/gl/gstglwindow.c
-index f7237a4976..34cd425d39 100644
+index f7237a4..34cd425 100644
 --- a/gst-libs/gst/gl/gstglwindow.c
 +++ b/gst-libs/gst/gl/gstglwindow.c
 @@ -979,6 +979,20 @@ gst_gl_window_resize (GstGLWindow * window, guint width, guint height)
@@ -303,7 +303,7 @@ index f7237a4976..34cd425d39 100644
  
  G_DEFINE_TYPE (GstGLDummyWindow, gst_gl_dummy_window, GST_TYPE_GL_WINDOW);
 diff --git a/gst-libs/gst/gl/gstglwindow.h b/gst-libs/gst/gl/gstglwindow.h
-index ece8d315b0..9d68a244c0 100644
+index ece8d31..9d68a24 100644
 --- a/gst-libs/gst/gl/gstglwindow.h
 +++ b/gst-libs/gst/gl/gstglwindow.h
 @@ -148,6 +148,8 @@ struct _GstGLWindow {
@@ -337,7 +337,7 @@ index ece8d315b0..9d68a244c0 100644
  /* subclass usage only */
  GST_GL_API
 diff --git a/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.c b/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.c
-index 8d6fceb80b..40b8c73a48 100644
+index 8d6fceb..40b8c73 100644
 --- a/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.c
 +++ b/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.c
 @@ -46,6 +46,8 @@ static void gst_gl_window_viv_fb_egl_draw (GstGLWindow * window);
@@ -389,7 +389,7 @@ index 8d6fceb80b..40b8c73a48 100644
 +  return TRUE;
 +}
 diff --git a/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.h b/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.h
-index 60205e0dcb..244e66368f 100644
+index 60205e0..244e663 100644
 --- a/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.h
 +++ b/gst-libs/gst/gl/viv-fb/gstglwindow_viv_fb_egl.h
 @@ -47,6 +47,7 @@ struct _GstGLWindowVivFBEGL {
@@ -401,5 +401,5 @@ index 60205e0dcb..244e66368f 100644
  
  struct _GstGLWindowVivFBEGLClass {
 -- 
-2.11.0
+2.20.1
 

@@ -1,4 +1,4 @@
-From 420733940d99e72155096644fc98eaca8cf5a19a Mon Sep 17 00:00:00 2001
+From a60ae80626decc060fffa7fe1b580c1d3735a56f Mon Sep 17 00:00:00 2001
 From: Carlos Rafael Giani <dv@pseudoterminal.org>
 Date: Thu, 4 Oct 2018 00:27:42 +0200
 Subject: [PATCH 21/45] gl/gbm: Add GST_GL_GBM_DRM_CONNECTOR environment
@@ -14,11 +14,11 @@ Related to #490
 (cherry picked from commit 08ea7d676e4878533e06f3d8f614622b6b6fd48a)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/gbm/gstgldisplay_gbm.c | 47 +++++++++++++++++++++++++++++-----
+ gst-libs/gst/gl/gbm/gstgldisplay_gbm.c | 47 ++++++++++++++++++++++----
  1 file changed, 40 insertions(+), 7 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
-index 29c2c5e2d1..3e81ed7213 100644
+index 29c2c5e..3e81ed7 100644
 --- a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 +++ b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 @@ -49,7 +49,8 @@ static guint32 gst_gl_gbm_find_crtc_id_for_encoder (GstGLDisplayGBM *
@@ -121,5 +121,5 @@ index 29c2c5e2d1..3e81ed7213 100644
    }
  
 -- 
-2.11.0
+2.20.1
 

@@ -1,4 +1,4 @@
-From 10d50e500cc59a008f811bb3e76aa3fe22b0a8df Mon Sep 17 00:00:00 2001
+From 74a6445aa43fdf56dd2e52715b96f982befe8ce7 Mon Sep 17 00:00:00 2001
 From: Michael Olbrich <m.olbrich@pengutronix.de>
 Date: Tue, 30 Oct 2018 12:25:02 +0100
 Subject: [PATCH 05/45] gl/egl: Add gst_egl_image_from_dmabuf_direct() function
@@ -17,12 +17,12 @@ https://bugzilla.gnome.org/show_bug.cgi?id=783521
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
  gst-libs/gst/gl/egl/gstegl.h      |   4 +
- gst-libs/gst/gl/egl/gsteglimage.c | 346 +++++++++++++++++++++++++++++++++++++-
+ gst-libs/gst/gl/egl/gsteglimage.c | 346 +++++++++++++++++++++++++++++-
  gst-libs/gst/gl/egl/gsteglimage.h |   6 +
  3 files changed, 349 insertions(+), 7 deletions(-)
 
 diff --git a/gst-libs/gst/gl/egl/gstegl.h b/gst-libs/gst/gl/egl/gstegl.h
-index 877e66859e..694912ee0c 100644
+index 877e668..694912e 100644
 --- a/gst-libs/gst/gl/egl/gstegl.h
 +++ b/gst-libs/gst/gl/egl/gstegl.h
 @@ -52,6 +52,10 @@
@@ -37,7 +37,7 @@ index 877e66859e..694912ee0c 100644
  const gchar *   gst_egl_get_error_string             (EGLint err);
  
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 601e1fddcc..8f92e7bad8 100644
+index 601e1fd..8f92e7b 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -29,9 +29,9 @@
@@ -433,7 +433,7 @@ index 601e1fddcc..8f92e7bad8 100644
  gst_egl_image_export_dmabuf (GstEGLImage * image, int *fd, gint * stride,
      gsize * offset)
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.h b/gst-libs/gst/gl/egl/gsteglimage.h
-index aaebceccf0..ec08c3bfca 100644
+index aaebcec..ec08c3b 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.h
 +++ b/gst-libs/gst/gl/egl/gsteglimage.h
 @@ -89,6 +89,12 @@ GstEGLImage *           gst_egl_image_from_dmabuf               (GstGLContext *
@@ -450,5 +450,5 @@ index aaebceccf0..ec08c3bfca 100644
  #endif
  
 -- 
-2.11.0
+2.20.1
 

@@ -1,4 +1,4 @@
-From 8d4922f75f8a9f7195d7280e159d73d4defd11a3 Mon Sep 17 00:00:00 2001
+From 7bdef2a5ce4fecdb02a63c3177b989b0f691b83b Mon Sep 17 00:00:00 2001
 From: Seungha Yang <seungha.yang@navercorp.com>
 Date: Fri, 29 Mar 2019 12:42:45 +0900
 Subject: [PATCH 29/45] gluploadelement: Fix caps leak
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/ext/gl/gstgluploadelement.c b/ext/gl/gstgluploadelement.c
-index 68b3bdc884..c9a3b45f2c 100644
+index 68b3bdc..c9a3b45 100644
 --- a/ext/gl/gstgluploadelement.c
 +++ b/ext/gl/gstgluploadelement.c
 @@ -256,6 +256,7 @@ again:
@@ -26,5 +26,5 @@ index 68b3bdc884..c9a3b45f2c 100644
        GST_DEBUG_OBJECT (bt, "Retry uploading with new caps");
        goto again;
 -- 
-2.11.0
+2.20.1
 

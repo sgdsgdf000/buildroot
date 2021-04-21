@@ -1,4 +1,4 @@
-From bc40d0abe000df242bd20deff5814c681ca2f28c Mon Sep 17 00:00:00 2001
+From 8ba2679ee42332bc44121bf2a607fcdecd06a0e3 Mon Sep 17 00:00:00 2001
 From: Carlos Rafael Giani <dv@pseudoterminal.org>
 Date: Thu, 4 Oct 2018 00:22:02 +0200
 Subject: [PATCH 20/45] gl/gbm: Improve logging output
@@ -13,12 +13,12 @@ Related to #490
 (cherry picked from commit 3663ad787d34610d42a4ef475dea25c1b6b53f44)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/gbm/gstgl_gbm_utils.c  |  5 ++-
- gst-libs/gst/gl/gbm/gstgldisplay_gbm.c | 68 ++++++++++++++++++++--------------
+ gst-libs/gst/gl/gbm/gstgl_gbm_utils.c  |  5 +-
+ gst-libs/gst/gl/gbm/gstgldisplay_gbm.c | 68 ++++++++++++++++----------
  2 files changed, 44 insertions(+), 29 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gbm/gstgl_gbm_utils.c b/gst-libs/gst/gl/gbm/gstgl_gbm_utils.c
-index 2537b4213c..0f9259185c 100644
+index 2537b42..0f92591 100644
 --- a/gst-libs/gst/gl/gbm/gstgl_gbm_utils.c
 +++ b/gst-libs/gst/gl/gbm/gstgl_gbm_utils.c
 @@ -26,7 +26,6 @@
@@ -48,7 +48,7 @@ index 2537b4213c..0f9259185c 100644
        return "<unknown>";
    }
 diff --git a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
-index e842046326..29c2c5e2d1 100644
+index e842046..29c2c5e 100644
 --- a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 +++ b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 @@ -160,32 +160,41 @@ gst_gl_display_gbm_setup_drm (GstGLDisplayGBM * display_gbm)
@@ -191,5 +191,5 @@ index e842046326..29c2c5e2d1 100644
  
      if (display_gbm->crtc_id == INVALID_CRTC) {
 -- 
-2.11.0
+2.20.1
 

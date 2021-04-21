@@ -1,4 +1,4 @@
-From de975f9fab9aa2f89edd284c7f06a3223118210c Mon Sep 17 00:00:00 2001
+From 86a2934e196bdaf6ebce39f1c2f26bd97cb5b8ca Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Wed, 17 Oct 2018 15:47:07 +0200
 Subject: [PATCH 11/45] glupload: calculate DRM fourcc once for direct dmabuf
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 8f92e7bad8..5af77d9dec 100644
+index 8f92e7b..5af77d9 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -582,8 +582,7 @@ _drm_direct_fourcc_from_info (GstVideoInfo * info)
@@ -81,5 +81,5 @@ index 8f92e7bad8..5af77d9dec 100644
    /* first plane */
    {
 -- 
-2.11.0
+2.20.1
 

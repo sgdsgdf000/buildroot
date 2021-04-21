@@ -1,7 +1,7 @@
-From d0d5d3fb4bb0c57ee5266c5533b9bdbd780e8a83 Mon Sep 17 00:00:00 2001
+From a6211f88ddd6cab3ddd0ad1b4c4ee913ee24b628 Mon Sep 17 00:00:00 2001
 From: "olivier.crete@collabora.com" <olivier.crete@collabora.com>
 Date: Tue, 6 Aug 2019 19:09:54 +0100
-Subject: [PATCH 22/60] wayland: Drop big-endian version of the DRM formats
+Subject: [PATCH 22/68] wayland: Drop big-endian version of the DRM formats
 
 They were a big in some big-endian implementations
 
@@ -13,7 +13,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  2 files changed, 28 deletions(-)
 
 diff --git a/ext/wayland/wlvideoformat.c b/ext/wayland/wlvideoformat.c
-index 77cfac8a0..e82b46941 100644
+index 77cfac8..e82b469 100644
 --- a/ext/wayland/wlvideoformat.c
 +++ b/ext/wayland/wlvideoformat.c
 @@ -43,16 +43,6 @@ typedef struct
@@ -69,7 +69,7 @@ index 77cfac8a0..e82b46941 100644
    {DRM_FORMAT_YUYV, GST_VIDEO_FORMAT_YUY2},
    {DRM_FORMAT_NV12, GST_VIDEO_FORMAT_NV12},
 diff --git a/ext/wayland/wlwindow.c b/ext/wayland/wlwindow.c
-index 7deba34ca..b226d5034 100644
+index 7deba34..b226d50 100644
 --- a/ext/wayland/wlwindow.c
 +++ b/ext/wayland/wlwindow.c
 @@ -496,11 +496,7 @@ gst_wl_window_update_borders (GstWlWindow * window)

@@ -1,4 +1,4 @@
-From f8570bfae29c454ef289663e1e0adb246eabc5c4 Mon Sep 17 00:00:00 2001
+From 4e522ce3203f8ed719d4826373c96d180f3e0cb1 Mon Sep 17 00:00:00 2001
 From: Michael Olbrich <m.olbrich@pengutronix.de>
 Date: Thu, 5 Jul 2018 15:17:30 +0200
 Subject: [PATCH 07/45] glupload: allow system memory for dmabuf in
@@ -17,7 +17,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 6 insertions(+)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index aa38a41814..b53d481f9e 100644
+index aa38a41..b53d481 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -538,10 +538,16 @@ _dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
@@ -38,5 +38,5 @@ index aa38a41814..b53d481f9e 100644
      n = gst_caps_get_size (ret);
      for (i = 0; i < n; i++) {
 -- 
-2.11.0
+2.20.1
 

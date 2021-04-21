@@ -1,4 +1,4 @@
-From 14fafc35fcc743f37cef77692cf2c40bbc5aa8a3 Mon Sep 17 00:00:00 2001
+From 019e33cbdd5a55372949f8838ad0f15164ecd97b Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Sat, 1 Dec 2018 20:45:31 -0500
 Subject: [PATCH 24/45] gl: window-gbm: Restore CRTC on close
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 21 insertions(+)
 
 diff --git a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
-index 1678fa28a4..6f4a844cf0 100644
+index 1678fa2..6f4a844 100644
 --- a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 +++ b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 @@ -110,6 +110,22 @@ gst_gl_window_gbm_egl_close (GstGLWindow * window)
@@ -53,5 +53,5 @@ index 1678fa28a4..6f4a844cf0 100644
      ret = drmModeSetCrtc (display->drm_fd, display->crtc_id, framebuf->fb_id,
          0, 0, &(display->drm_mode_connector->connector_id), 1,
 -- 
-2.11.0
+2.20.1
 

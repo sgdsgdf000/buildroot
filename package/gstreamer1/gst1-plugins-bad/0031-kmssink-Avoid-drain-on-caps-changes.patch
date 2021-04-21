@@ -1,7 +1,7 @@
-From d9e7f1ff5b711079274f482d670b48afdbf1933c Mon Sep 17 00:00:00 2001
+From 5f9dcbbd6bca023315a91c60fa2e95d5c0bd2bca Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Fri, 8 Nov 2019 17:57:58 -0500
-Subject: [PATCH 31/60] kmssink: Avoid drain on caps changes
+Subject: [PATCH 31/68] kmssink: Avoid drain on caps changes
 
 Draining systematically on caps changes was a hack. Instead, properly
 save the render information used to render last_render, and use that
@@ -16,7 +16,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  2 files changed, 105 insertions(+), 65 deletions(-)
 
 diff --git a/sys/kms/gstkmssink.c b/sys/kms/gstkmssink.c
-index 50c339a97..ce41efc55 100644
+index 50c339a..ce41efc 100644
 --- a/sys/kms/gstkmssink.c
 +++ b/sys/kms/gstkmssink.c
 @@ -1049,7 +1049,8 @@ config_failed:
@@ -335,7 +335,7 @@ index 50c339a97..ce41efc55 100644
  }
  
 diff --git a/sys/kms/gstkmssink.h b/sys/kms/gstkmssink.h
-index 65407dab4..4b1ebeac3 100644
+index 65407da..4b1ebea 100644
 --- a/sys/kms/gstkmssink.h
 +++ b/sys/kms/gstkmssink.h
 @@ -73,6 +73,9 @@ struct _GstKMSSink {

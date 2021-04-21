@@ -1,7 +1,7 @@
-From c179f4f231fbe396e504edac91b2f11ff333b35a Mon Sep 17 00:00:00 2001
+From 3dd53e8f8c94f0525fae72df8f47abbc6978fbfc Mon Sep 17 00:00:00 2001
 From: "olivier.crete@collabora.com" <olivier.crete@collabora.com>
 Date: Tue, 6 Aug 2019 21:08:12 +0100
-Subject: [PATCH 23/60] wayland: Add more DRM formats
+Subject: [PATCH 23/68] wayland: Add more DRM formats
 
 Add DRM format equivalents that we were missing compared
 to our caps.
@@ -13,7 +13,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/ext/wayland/wlvideoformat.c b/ext/wayland/wlvideoformat.c
-index e82b46941..1aac624a6 100644
+index e82b469..1aac624 100644
 --- a/ext/wayland/wlvideoformat.c
 +++ b/ext/wayland/wlvideoformat.c
 @@ -84,8 +84,20 @@ static const wl_DmabufVideoFormat dmabuf_formats[] = {

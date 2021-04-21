@@ -1,4 +1,4 @@
-From 78107cb3e347550567a0cec38f4baa806f60828d Mon Sep 17 00:00:00 2001
+From 183f3b3ed5324d23639ad211b735975e51de8249 Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <philipp.zabel@gmail.com>
 Date: Fri, 6 Mar 2020 00:03:49 +0100
 Subject: [PATCH 39/45] glupload: dmabuf: only accept uploads to external-oes
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 5 insertions(+)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 730a073b99..6ee1195ec9 100644
+index 730a073..6ee1195 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -635,6 +635,11 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
@@ -30,5 +30,5 @@ index 730a073b99..6ee1195ec9 100644
    if (!gst_is_dmabuf_memory (gst_buffer_peek_memory (buffer, 0)))
      return FALSE;
 -- 
-2.11.0
+2.20.1
 

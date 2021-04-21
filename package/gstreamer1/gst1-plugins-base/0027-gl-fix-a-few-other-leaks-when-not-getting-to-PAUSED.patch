@@ -1,4 +1,4 @@
-From 6da1cc549d52f2c3f7ad39326b5205cc54ca9e9d Mon Sep 17 00:00:00 2001
+From f5905a35d39b5ed39ea87d34c6dfcd7d0c4461ef Mon Sep 17 00:00:00 2001
 From: Matthew Waters <matthew@centricular.com>
 Date: Thu, 7 Mar 2019 02:01:09 +1100
 Subject: [PATCH 27/45] gl: fix a few other leaks when not getting to PAUSED
@@ -6,12 +6,12 @@ Subject: [PATCH 27/45] gl: fix a few other leaks when not getting to PAUSED
 (cherry picked from commit 4e13980e107f27317475f51f366e9dddde092738)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- ext/gl/gstgluploadelement.c       | 35 +++++++++++++++++++++++++++++++++++
+ ext/gl/gstgluploadelement.c       | 35 +++++++++++++++++++++++++++++++
  gst-libs/gst/gl/gstglbasefilter.c |  5 +++++
  2 files changed, 40 insertions(+)
 
 diff --git a/ext/gl/gstgluploadelement.c b/ext/gl/gstgluploadelement.c
-index ad984f68c0..68b3bdc884 100644
+index ad984f6..68b3bdc 100644
 --- a/ext/gl/gstgluploadelement.c
 +++ b/ext/gl/gstgluploadelement.c
 @@ -54,6 +54,10 @@ gst_gl_upload_element_prepare_output_buffer (GstBaseTransform * bt,
@@ -68,7 +68,7 @@ index ad984f68c0..68b3bdc884 100644
 +  return ret;
 +}
 diff --git a/gst-libs/gst/gl/gstglbasefilter.c b/gst-libs/gst/gl/gstglbasefilter.c
-index 3c9eb91182..fd1487b224 100644
+index 3c9eb91..fd1487b 100644
 --- a/gst-libs/gst/gl/gstglbasefilter.c
 +++ b/gst-libs/gst/gl/gstglbasefilter.c
 @@ -456,6 +456,11 @@ gst_gl_base_filter_change_state (GstElement * element,
@@ -84,5 +84,5 @@ index 3c9eb91182..fd1487b224 100644
      default:
        break;
 -- 
-2.11.0
+2.20.1
 

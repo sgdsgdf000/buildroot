@@ -1,7 +1,7 @@
-From e7cfd1ca763a1db7a222a07ffb077cc0067cba05 Mon Sep 17 00:00:00 2001
+From 56339f66b2bd5ddc4f72ae65a68fa7039a427a85 Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Tue, 14 Apr 2020 17:10:34 -0400
-Subject: [PATCH 34/60] kmssink: Save last metadata at the same time as the
+Subject: [PATCH 34/68] kmssink: Save last metadata at the same time as the
  last buffer
 
 The render width/height and the vinfo was only saved upon renegotiation. This
@@ -16,7 +16,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/sys/kms/gstkmssink.c b/sys/kms/gstkmssink.c
-index d2c82df04..b32fd841d 100644
+index d2c82df..b32fd84 100644
 --- a/sys/kms/gstkmssink.c
 +++ b/sys/kms/gstkmssink.c
 @@ -1118,10 +1118,6 @@ gst_kms_sink_set_caps (GstBaseSink * bsink, GstCaps * caps)
