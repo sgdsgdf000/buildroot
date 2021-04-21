@@ -1,4 +1,4 @@
-From 4286cfb9702a7a8333a558295763c6a9f193019c Mon Sep 17 00:00:00 2001
+From 2bca30461df19cfc69c427e8bb5a8e57a9303111 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Fri, 1 Nov 2019 17:55:06 +0800
 Subject: [PATCH 5/5] pixman_image_composite32: Support rockchip RGA 2D accel
@@ -7,22 +7,23 @@ Disabled by default, set env PIXMAN_USE_RGA=1 to enable.
 
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- configure.ac       |   6 +
+ configure.ac       |   7 ++
  pixman/Makefile.am |   2 +-
  pixman/pixman.c    | 274 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 281 insertions(+), 1 deletion(-)
+ 3 files changed, 282 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 156edfb..5464cef 100644
+index 156edfb..25de590 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -187,6 +187,12 @@ PIXMAN_CHECK_CFLAG([-Wdeclaration-after-statement])
+@@ -187,6 +187,13 @@ PIXMAN_CHECK_CFLAG([-Wdeclaration-after-statement])
  PIXMAN_CHECK_CFLAG([-Wno-unused-local-typedefs])
  PIXMAN_CHECK_CFLAG([-fno-strict-aliasing])
  
 +dnl check for rockchip RGA
-+PKG_CHECK_MODULES(RGA, [librga], [enable_rga=yes], [enable_rga=no])
-+AM_CONDITIONAL(HAVE_RGA, test "x$enable_rga" = xyes)
++PKG_CHECK_MODULES(RGA, [librga],
++                  AC_DEFINE(HAVE_RGA, 1, [Have rockchip RGA])],
++                  AC_MSG_NOTICE([Without rockchip RGA]))
 +AC_SUBST(RGA_CFLAGS)
 +AC_SUBST(RGA_LIBS)
 +
