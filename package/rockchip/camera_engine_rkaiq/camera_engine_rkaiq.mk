@@ -32,7 +32,8 @@ endif
 ifeq ($(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE_USE_BIN), y)
 
 define HOST_CAMERA_ENGINE_RKAIQ_BUILD_CMDS
-	cd $(@D)/rkisp_parser_demo/build/linux && ./make-Makefiles.bash && $(MAKE)
+	cd $(@D)/rkisp_parser_demo/build/linux && ./make-Makefiles-m32.bash && $(MAKE)
+	dpkg -L g++-multilib gcc-multilib || echo "## Please install g++-multilib gcc-multilib package"
 endef
 
 define HOST_CAMERA_ENGINE_RKAIQ_INSTALL_CMDS
