@@ -138,4 +138,8 @@ comment "demo clients needs an OpenGL ES provider, an OpenEGL-capable Wayland ba
 		!BR2_USE_WCHAR || !BR2_PACKAGE_HAS_LIBGLES || \
 		!BR2_PACKAGE_HAS_LIBEGL_WAYLAND
 
+config BR2_PACKAGE_WESTON_DEFAULT_PIXMAN
+	bool "Use pixman-renderer by default"
+	default y if BR2_PACKAGE_MESA3D_OPENGL_EGL
+
 endif
