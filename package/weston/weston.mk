@@ -141,7 +141,7 @@ endif
 ifeq ($(BR2_PACKAGE_WESTON_DEFAULT_PIXMAN),y)
 define WESTON_INSTALL_PIXMAN_INI
         $(INSTALL) -D -m 0644 $(WESTON_PKGDIR)/pixman.ini \
-                $(TARGET_DIR)/etc/weston/weston.ini.d/01-pixman.ini
+                $(TARGET_DIR)/etc/xdg/weston/weston.ini.d/01-pixman.ini
 endef
 
 WESTON_POST_INSTALL_TARGET_HOOKS += WESTON_INSTALL_PIXMAN_INI
