@@ -3,7 +3,7 @@
 # rknpu
 #
 ################################################################################
-RKNPU_VERSION = 1.5.0
+RKNPU_VERSION = 1.6.1
 RKNPU_SITE_METHOD = local
 RKNPU_SITE = $(TOPDIR)/../external/rknpu
 NPU_TEST_FILE = $(@D)/test
