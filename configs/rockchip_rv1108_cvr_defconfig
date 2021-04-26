@@ -1,7 +1,6 @@
 #include "rv1108_arm.config"
 #include "rv1108_base.config"
 #include "rv1108_cvr.config"
-#include "rv1108_media.config"
 BR2_PACKAGE_IO=y
 BR2_PACKAGE_DOSFSTOOLS=y
 BR2_PACKAGE_DOSFSTOOLS_FATLABEL=y
