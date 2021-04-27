@@ -4,10 +4,8 @@
 #
 ################################################################################
 
-# BLUEZ_ALSA_VERSION = 9045edb436ea755f395a2e09e4525b5defad286a
-# BLUEZ_ALSA_SITE = $(call github,Arkq,bluez-alsa,$(BLUEZ_ALSA_VERSION))
-BLUEZ_ALSA_SITE = $(TOPDIR)/../external/bluez-alsa
-BLUEZ_ALSA_SITE_METHOD = local
+BLUEZ_ALSA_VERSION = 22ffb1965a0b79fbb28af5751b98814f94f6f81d
+BLUEZ_ALSA_SITE = $(call github,Arkq,bluez-alsa,$(BLUEZ_ALSA_VERSION))
 BLUEZ_ALSA_LICENSE = MIT
 BLUEZ_ALSA_LICENSE_FILES = LICENSE.txt
 BLUEZ_ALSA_DEPENDENCIES = alsa-lib bluez5_utils libglib2 sbc host-pkgconf
