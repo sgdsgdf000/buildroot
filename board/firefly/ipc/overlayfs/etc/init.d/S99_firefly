@@ -2,6 +2,7 @@
 file="/userdata/firefly/firefly_start.sh"
 case "$1" in
   start)
+    cat /etc/version | grep XML_NAME | cut -d "=" -f 2
     if [ -f "$file" ]; then
         chmod 777 $file
         $file
