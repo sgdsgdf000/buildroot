@@ -17,6 +17,7 @@ short_press()
 	fi
 
 	if [ ! -f $LOCKFILE ]; then
+		/oem/RkLunch-stop.sh
 		logger -t $(basename $0) "[$$]: Prepare to suspend..."
 
 		touch $LOCKFILE
