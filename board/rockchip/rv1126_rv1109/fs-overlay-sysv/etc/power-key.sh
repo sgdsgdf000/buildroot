@@ -23,6 +23,10 @@ short_press()
 		touch $LOCKFILE
 		sh -c "$SUSPEND_CMD"
 		{ sleep 2 && rm $LOCKFILE; }&
+        else
+                export PATH=$PATH:/oem/usr/bin/:/oem/
+                export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/oem/usr/lib
+                /oem/RkLunch.sh
 	fi
 }
 
