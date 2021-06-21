@@ -1,3 +1,4 @@
 source "package/firefly/arcface/Config.in"
 source "package/firefly/arcuvc/Config.in"
+source "package/firefly/rkaiq_switch_mode/Config.in"
 source "package/firefly/firefly_rkmedia_uvc/Config.in"
