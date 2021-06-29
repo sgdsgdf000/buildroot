@@ -1,4 +1,4 @@
-From 39562bf062804f84dc84fea43ea8903dfd8daedf Mon Sep 17 00:00:00 2001
+From c4af59c626258a78b693affa6cfa22ad828cbaca Mon Sep 17 00:00:00 2001
 From: Michael Tretter <m.tretter@pengutronix.de>
 Date: Wed, 23 Jan 2019 12:50:40 +0100
 Subject: [PATCH 30/45] glupload: prevent segfault when updating caps
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 8a63a2cbb2..5b88ec91b5 100644
+index 8a63a2c..5b88ec9 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -1873,6 +1873,7 @@ _gst_gl_upload_set_caps_unlocked (GstGLUpload * upload, GstCaps * in_caps,
@@ -27,5 +27,5 @@ index 8a63a2cbb2..5b88ec91b5 100644
    upload->priv->method_i = 0;
  
 -- 
-2.11.0
+2.20.1
 

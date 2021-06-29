@@ -1,4 +1,4 @@
-From 6f35e8c616a550e9906ad54e3ead07e63e53a3dc Mon Sep 17 00:00:00 2001
+From 45f993ae5461956f84d9f58562dca391a282eebc Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Tue, 18 Feb 2020 13:46:08 +0100
 Subject: [PATCH 38/45] glupload: dmabuf: add DirectDmabufExternal uploader
@@ -10,11 +10,11 @@ uploader into a separate DirectDmabufExternal uploader.
 (cherry picked from commit 0e038a561243e7763cda85383f83d7d9236d2764)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/gstglupload.c | 48 +++++++++++++++++++++++++++++++++++--------
+ gst-libs/gst/gl/gstglupload.c | 48 +++++++++++++++++++++++++++++------
  1 file changed, 40 insertions(+), 8 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 0c54991d5d..730a073b99 100644
+index 0c54991..730a073 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -513,6 +513,7 @@ _dma_buf_upload_new (GstGLUpload * upload)
@@ -117,5 +117,5 @@ index 0c54991d5d..730a073b99 100644
  #endif
  #if GST_GL_HAVE_VIV_DIRECTVIV
 -- 
-2.11.0
+2.20.1
 

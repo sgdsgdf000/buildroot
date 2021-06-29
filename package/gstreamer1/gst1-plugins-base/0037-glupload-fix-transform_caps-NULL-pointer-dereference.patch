@@ -1,4 +1,4 @@
-From bdf0766aa3023c44a342f610fe0fcf45b363ca99 Mon Sep 17 00:00:00 2001
+From bf6a957d05d0228df34f49b530ae99f1be92e18c Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Mon, 24 Feb 2020 16:38:56 +0100
 Subject: [PATCH 37/45] glupload: fix transform_caps NULL pointer dereference
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 12 insertions(+), 9 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 41df399326..0c54991d5d 100644
+index 41df399..0c54991 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -1810,16 +1810,19 @@ gst_gl_upload_transform_caps (GstGLUpload * upload, GstGLContext * context,
@@ -48,5 +48,5 @@ index 41df399326..0c54991d5d 100644
  
    tmp = gst_caps_new_empty ();
 -- 
-2.11.0
+2.20.1
 

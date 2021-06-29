@@ -1,7 +1,7 @@
-From ca7eefcb701277d08bcba4296a3d9099d02c27ea Mon Sep 17 00:00:00 2001
+From 4365384591ea0a1a3eeaee763c7951634406e1d6 Mon Sep 17 00:00:00 2001
 From: Niels De Graef <niels.degraef@barco.com>
 Date: Fri, 1 Mar 2019 09:56:24 +0100
-Subject: [PATCH 16/60] waylandsink: Implement XDG-shell stable support
+Subject: [PATCH 16/68] waylandsink: Implement XDG-shell stable support
 
 [wl_shell] is officially [deprecated], so provide support for the
 XDG-shell protocol should be provided by all desktop-like compositors.
@@ -28,7 +28,7 @@ Fixes https://gitlab.freedesktop.org/gstreamer/gst-plugins-bad/issues/897
  9 files changed, 164 insertions(+), 26 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index e41591284..34b5d1faa 100644
+index e415912..34b5d1f 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1319,7 +1319,7 @@ dnl **** Wayland ****
@@ -41,7 +41,7 @@ index e41591284..34b5d1faa 100644
        HAVE_WAYLAND="yes"
        AC_SUBST(WAYLAND_PROTOCOLS_DATADIR, `$PKG_CONFIG --variable=pkgdatadir wayland-protocols`)
 diff --git a/ext/wayland/Makefile.am b/ext/wayland/Makefile.am
-index a7fcc3278..95bb97e7f 100644
+index a7fcc32..95bb97e 100644
 --- a/ext/wayland/Makefile.am
 +++ b/ext/wayland/Makefile.am
 @@ -6,7 +6,9 @@ BUILT_SOURCES = \
@@ -66,7 +66,7 @@ index a7fcc3278..95bb97e7f 100644
  libgstwaylandsink_la_CFLAGS = \
  	$(GST_PLUGINS_BAD_CFLAGS) \
 diff --git a/ext/wayland/gstwaylandsink.c b/ext/wayland/gstwaylandsink.c
-index 158c9af88..78dd294a0 100644
+index 158c9af..78dd294 100644
 --- a/ext/wayland/gstwaylandsink.c
 +++ b/ext/wayland/gstwaylandsink.c
 @@ -659,6 +659,16 @@ render_last_buffer (GstWaylandSink * sink, gboolean redraw)
@@ -96,7 +96,7 @@ index 158c9af88..78dd294a0 100644
    }
  
 diff --git a/ext/wayland/meson.build b/ext/wayland/meson.build
-index affc3801f..598536b29 100644
+index affc380..598536b 100644
 --- a/ext/wayland/meson.build
 +++ b/ext/wayland/meson.build
 @@ -16,7 +16,8 @@ if use_wayland
@@ -110,7 +110,7 @@ index affc3801f..598536b29 100644
      protocols_files = []
  
 diff --git a/ext/wayland/wldisplay.c b/ext/wayland/wldisplay.c
-index 079901979..940009556 100644
+index 0799019..9400095 100644
 --- a/ext/wayland/wldisplay.c
 +++ b/ext/wayland/wldisplay.c
 @@ -90,6 +90,9 @@ gst_wl_display_finalize (GObject * gobject)
@@ -171,7 +171,7 @@ index 079901979..940009556 100644
  
    self->thread = g_thread_try_new ("GstWlDisplay", gst_wl_display_thread_run,
 diff --git a/ext/wayland/wldisplay.h b/ext/wayland/wldisplay.h
-index 020ed6ea3..4ecc0d659 100644
+index 020ed6e..4ecc0d6 100644
 --- a/ext/wayland/wldisplay.h
 +++ b/ext/wayland/wldisplay.h
 @@ -55,6 +55,7 @@ struct _GstWlDisplay
@@ -183,7 +183,7 @@ index 020ed6ea3..4ecc0d659 100644
    struct wl_shm *shm;
    struct wp_viewporter *viewporter;
 diff --git a/ext/wayland/wlwindow.c b/ext/wayland/wlwindow.c
-index 547917baa..afb598878 100644
+index 547917b..afb5988 100644
 --- a/ext/wayland/wlwindow.c
 +++ b/ext/wayland/wlwindow.c
 @@ -31,10 +31,69 @@
@@ -378,7 +378,7 @@ index 547917baa..afb598878 100644
  
  GstWlWindow *
 diff --git a/ext/wayland/wlwindow.h b/ext/wayland/wlwindow.h
-index ce2fa939a..861e324ad 100644
+index ce2fa93..861e324 100644
 --- a/ext/wayland/wlwindow.h
 +++ b/ext/wayland/wlwindow.h
 @@ -53,6 +53,8 @@ struct _GstWlWindow
@@ -391,7 +391,7 @@ index ce2fa939a..861e324ad 100644
    /* the size and position of the area_(sub)surface */
    GstVideoRectangle render_rectangle;
 diff --git a/gst-libs/gst/wayland/meson.build b/gst-libs/gst/wayland/meson.build
-index 7bff57103..4277e24c5 100644
+index 7bff571..4277e24 100644
 --- a/gst-libs/gst/wayland/meson.build
 +++ b/gst-libs/gst/wayland/meson.build
 @@ -1,4 +1,4 @@

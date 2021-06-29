@@ -1,4 +1,4 @@
-From 8543bf08298a1f200737f8c1c9c9ae21754ebdf2 Mon Sep 17 00:00:00 2001
+From e5aeb2ef9b598e2adb5ecb6dd496dfc6ce3b8488 Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Wed, 17 Oct 2018 17:11:20 +0200
 Subject: [PATCH 13/45] glupload: dmabuf-direct: query formats before modifiers
@@ -22,7 +22,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 28 insertions(+), 1 deletion(-)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 5af77d9dec..476166351a 100644
+index 5af77d9..4761663 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -586,20 +586,26 @@ _gst_egl_image_check_dmabuf_direct (GstGLContext * context, int fourcc)
@@ -82,5 +82,5 @@ index 5af77d9dec..476166351a 100644
        &num_modifiers);
    if (!ret || num_modifiers == 0)
 -- 
-2.11.0
+2.20.1
 

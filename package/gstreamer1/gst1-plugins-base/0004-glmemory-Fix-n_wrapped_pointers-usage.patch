@@ -1,4 +1,4 @@
-From 84fbdd0f4ef58f75b7ff1682a399e78a1238c0bf Mon Sep 17 00:00:00 2001
+From 265dc6803057725c5a2f4c0e1af26884a784d0c4 Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Wed, 7 Jun 2017 18:00:08 +0200
 Subject: [PATCH 04/45] glmemory: Fix n_wrapped_pointers usage
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/gst-libs/gst/gl/gstglmemory.c b/gst-libs/gst/gl/gstglmemory.c
-index 30d5f5e475..c65237334f 100644
+index 30d5f5e..c652373 100644
 --- a/gst-libs/gst/gl/gstglmemory.c
 +++ b/gst-libs/gst/gl/gstglmemory.c
 @@ -1458,8 +1458,13 @@ gst_gl_memory_setup_buffer (GstGLMemoryAllocator * allocator,
@@ -34,5 +34,5 @@ index 30d5f5e475..c65237334f 100644
    for (v = 0; v < views; v++) {
      for (i = 0; i < n_mem; i++) {
 -- 
-2.11.0
+2.20.1
 

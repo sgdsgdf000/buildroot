@@ -1,4 +1,4 @@
-From ff5399f4cf349ab671b9e770d133e2c9ba5ede35 Mon Sep 17 00:00:00 2001
+From 76468c37f81d94c9105b61c80f1e2bcbd669e4ff Mon Sep 17 00:00:00 2001
 From: Michael Olbrich <m.olbrich@pengutronix.de>
 Date: Thu, 5 Jul 2018 10:17:27 +0200
 Subject: [PATCH 10/45] glupload: Implement direct dmabuf uploader
@@ -16,11 +16,11 @@ https://bugzilla.gnome.org/show_bug.cgi?id=783521
 (cherry picked from commit 507e31dfc00256a9cb2081aaab98a7728b0197c3)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/gstglupload.c | 147 ++++++++++++++++++++++++++++++++++++++----
+ gst-libs/gst/gl/gstglupload.c | 147 ++++++++++++++++++++++++++++++----
  1 file changed, 133 insertions(+), 14 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 5ec84a8cac..8a45d0f870 100644
+index 5ec84a8..8a45d0f 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -492,6 +492,12 @@ struct DmabufUpload
@@ -266,5 +266,5 @@ index 5ec84a8cac..8a45d0f870 100644
  #endif
  #if GST_GL_HAVE_VIV_DIRECTVIV
 -- 
-2.11.0
+2.20.1
 

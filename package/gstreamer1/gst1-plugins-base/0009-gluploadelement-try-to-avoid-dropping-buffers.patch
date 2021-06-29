@@ -1,4 +1,4 @@
-From 94e58d098de1978b168a04175d85bb167bfbd352 Mon Sep 17 00:00:00 2001
+From 59b1a35c1a48b48b8ba6067a3e27c86bcf128f38 Mon Sep 17 00:00:00 2001
 From: Michael Olbrich <m.olbrich@pengutronix.de>
 Date: Wed, 4 Jul 2018 09:29:57 +0200
 Subject: [PATCH 09/45] gluploadelement: try to avoid dropping buffers
@@ -16,7 +16,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/ext/gl/gstgluploadelement.c b/ext/gl/gstgluploadelement.c
-index f9e52f6814..ad984f68c0 100644
+index f9e52f6..ad984f6 100644
 --- a/ext/gl/gstgluploadelement.c
 +++ b/ext/gl/gstgluploadelement.c
 @@ -239,9 +239,21 @@ gst_gl_upload_element_prepare_output_buffer (GstBaseTransform * bt,
@@ -43,5 +43,5 @@ index f9e52f6814..ad984f68c0 100644
    }
  
 -- 
-2.11.0
+2.20.1
 

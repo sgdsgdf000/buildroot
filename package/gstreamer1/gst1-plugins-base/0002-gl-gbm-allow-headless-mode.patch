@@ -1,4 +1,4 @@
-From 66bc41223d4b8b1a1588102b6c7b2b8651d3c99a Mon Sep 17 00:00:00 2001
+From 3422f7d06bd2038396483bfac21d281e531711af Mon Sep 17 00:00:00 2001
 From: freyr <ciceromarcus@yandex.ru>
 Date: Mon, 30 Jul 2018 10:03:11 +0300
 Subject: [PATCH 02/45] gl/gbm: allow headless mode
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  2 files changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
-index ae4c3cf213..0781812e85 100644
+index ae4c3cf..0781812 100644
 --- a/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 +++ b/gst-libs/gst/gl/gbm/gstgldisplay_gbm.c
 @@ -400,8 +400,7 @@ gst_gl_display_gbm_new (void)
@@ -28,7 +28,7 @@ index ae4c3cf213..0781812e85 100644
  
    if (!gst_gl_display_gbm_setup_gbm (display)) {
 diff --git a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
-index 04d1eec1f8..0d68b92514 100644
+index 04d1eec..0d68b92 100644
 --- a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 +++ b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 @@ -149,6 +149,12 @@ draw_cb (gpointer data)
@@ -75,5 +75,5 @@ index 04d1eec1f8..0d68b92514 100644
    GST_DEBUG ("Successfully created GBM surface");
  
 -- 
-2.11.0
+2.20.1
 

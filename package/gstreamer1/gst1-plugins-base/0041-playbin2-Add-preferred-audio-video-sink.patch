@@ -1,4 +1,4 @@
-From cd110a340efed4891254d5258b3b0c90334b2818 Mon Sep 17 00:00:00 2001
+From 374675c4194ad4280041f1cc546a912f4d086e15 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Fri, 14 Jun 2019 12:02:05 +0800
 Subject: [PATCH 41/45] playbin2: Add preferred audio/video sink
@@ -12,7 +12,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 31 insertions(+)
 
 diff --git a/gst/playback/gstplaybin2.c b/gst/playback/gstplaybin2.c
-index a2e9ed4453..5a95c9f129 100644
+index a2e9ed4..f59ef16 100644
 --- a/gst/playback/gstplaybin2.c
 +++ b/gst/playback/gstplaybin2.c
 @@ -200,6 +200,7 @@
@@ -82,5 +82,5 @@ index a2e9ed4453..5a95c9f129 100644
       * the matching audio/video sink from GstAVElements list */
      for (l = ave_list; l; l = l->next) {
 -- 
-2.11.0
+2.20.1
 
