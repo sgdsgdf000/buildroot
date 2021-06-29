@@ -1,4 +1,4 @@
-From aa241e201d6286a026ff2265671f2d53a59c7e7d Mon Sep 17 00:00:00 2001
+From 87fd1f4608f3756b1d7eda4830c98d42cd4f0fa2 Mon Sep 17 00:00:00 2001
 From: Philippe Normand <philn@igalia.com>
 Date: Sun, 23 Jun 2019 11:34:49 +0100
 Subject: [PATCH 31/45] glupload: Keep track of cached EGLImage texture format
@@ -19,7 +19,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 5b88ec91b5..5bd81b302d 100644
+index 5b88ec9..5bd81b3 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -704,8 +704,10 @@ _dma_buf_upload_accept (gpointer impl, GstBuffer * buffer, GstCaps * in_caps,
@@ -35,5 +35,5 @@ index 5b88ec91b5..5bd81b302d 100644
      /* otherwise create one and cache it */
      if (dmabuf->direct)
 -- 
-2.11.0
+2.20.1
 

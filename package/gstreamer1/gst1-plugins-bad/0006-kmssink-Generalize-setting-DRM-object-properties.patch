@@ -1,7 +1,7 @@
-From 271cee7015ddb493288d27d734cc3cc8473d1bd7 Mon Sep 17 00:00:00 2001
+From 1049f68113e73f5da7a4c27845a2be02e1214e8a Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Mon, 27 Aug 2018 15:07:47 -0400
-Subject: [PATCH 06/60] kmssink: Generalize setting DRM object properties
+Subject: [PATCH 06/68] kmssink: Generalize setting DRM object properties
 
 https://bugzilla.gnome.org/show_bug.cgi?id=797027
 ---
@@ -9,7 +9,7 @@ https://bugzilla.gnome.org/show_bug.cgi?id=797027
  1 file changed, 28 insertions(+), 9 deletions(-)
 
 diff --git a/sys/kms/gstkmssink.c b/sys/kms/gstkmssink.c
-index 075efc9bb..041eda500 100644
+index 075efc9..041eda5 100644
 --- a/sys/kms/gstkmssink.c
 +++ b/sys/kms/gstkmssink.c
 @@ -587,10 +587,13 @@ typedef struct

@@ -1,4 +1,4 @@
-From 8fb59f818a96cc1837e9e5f5e77f74a7a1dddd92 Mon Sep 17 00:00:00 2001
+From a48acfd636259de521e206316da3b772c7f213f7 Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Wed, 31 Oct 2018 18:26:42 +0000
 Subject: [PATCH 15/45] glupload: Do prepend the preferred caps
@@ -23,7 +23,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index bbe375fb88..56fd3b1170 100644
+index bbe375f..56fd3b1 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -850,7 +850,9 @@ _direct_dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
@@ -38,5 +38,5 @@ index bbe375fb88..56fd3b1170 100644
      g_value_unset (&formats);
  
 -- 
-2.11.0
+2.20.1
 

@@ -1,7 +1,7 @@
-From fe05a81e4d727406981be33b56297be11c87d9ed Mon Sep 17 00:00:00 2001
+From ff0254fa8102b933b077c6172b99b3e5ead70d7e Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Fri, 31 Jan 2020 09:47:59 -0500
-Subject: [PATCH 33/60] kmssink: Fix crash with force-modesetting=1
+Subject: [PATCH 33/68] kmssink: Fix crash with force-modesetting=1
 
 This is a master regression, we would allocate a bo without having
 created the allocator yet. As of now, we lazily create the allocator.
@@ -13,7 +13,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/sys/kms/gstkmssink.c b/sys/kms/gstkmssink.c
-index 69a8c3658..d2c82df04 100644
+index 69a8c36..d2c82df 100644
 --- a/sys/kms/gstkmssink.c
 +++ b/sys/kms/gstkmssink.c
 @@ -410,6 +410,14 @@ get_drm_caps (GstKMSSink * self)

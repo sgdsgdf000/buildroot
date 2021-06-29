@@ -1,7 +1,7 @@
-From a2d158fe8b9bab65908623b295c1c0d92352d4fe Mon Sep 17 00:00:00 2001
+From d3c04c86ef274d21e580d2fdfae140c13ecfaf5f Mon Sep 17 00:00:00 2001
 From: Shinya Saito <ssaito@igel.co.jp>
 Date: Thu, 22 Aug 2019 16:04:37 +0900
-Subject: [PATCH 26/60] waylandsink: Fix xdg_shell fullscreen mode
+Subject: [PATCH 26/68] waylandsink: Fix xdg_shell fullscreen mode
 
 xdg_shell fullscreen mode doesn't work for committing
 xdg_surface without configure acknowledgement.
@@ -16,7 +16,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/ext/wayland/wlwindow.c b/ext/wayland/wlwindow.c
-index 0c001aa1a..745d3c56d 100644
+index 0c001aa..745d3c5 100644
 --- a/ext/wayland/wlwindow.c
 +++ b/ext/wayland/wlwindow.c
 @@ -259,7 +259,6 @@ gst_wl_window_new_toplevel (GstWlDisplay * display, const GstVideoInfo * info,

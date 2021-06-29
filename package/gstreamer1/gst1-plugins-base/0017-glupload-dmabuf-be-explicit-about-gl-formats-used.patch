@@ -1,4 +1,4 @@
-From 5c689d294c8a87f07aabf9e7ba536425124c4cfc Mon Sep 17 00:00:00 2001
+From 471f126481e731865ec7941eee661aba4a035135 Mon Sep 17 00:00:00 2001
 From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 Date: Fri, 9 Nov 2018 09:32:49 +0100
 Subject: [PATCH 17/45] glupload: dmabuf: be explicit about gl formats used
@@ -21,7 +21,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 56fd3b1170..382638787d 100644
+index 56fd3b1..3826387 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -490,6 +490,7 @@ struct DmabufUpload
@@ -52,5 +52,5 @@ index 56fd3b1170..382638787d 100644
  }
  
 -- 
-2.11.0
+2.20.1
 

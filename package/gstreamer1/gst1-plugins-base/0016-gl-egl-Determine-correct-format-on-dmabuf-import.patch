@@ -1,4 +1,4 @@
-From 1af9550b4bb51f161d0be644b461b9312de23c7d Mon Sep 17 00:00:00 2001
+From 6f99c09c1d9c134fa2db10144182f294f074cac9 Mon Sep 17 00:00:00 2001
 From: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
 Date: Fri, 9 Nov 2018 10:30:06 +0100
 Subject: [PATCH 16/45] gl/egl: Determine correct format on dmabuf import
@@ -23,7 +23,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 11 insertions(+), 5 deletions(-)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 16a9136502..7fad6b5d34 100644
+index 16a9136..7fad6b5 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -353,7 +353,8 @@ gst_egl_image_from_texture (GstGLContext * context, GstGLMemory * gl_mem,
@@ -101,5 +101,5 @@ index 16a9136502..7fad6b5d34 100644
        (char *) &fourcc, fourcc, plane,
        GST_VIDEO_INFO_COMP_WIDTH (in_info, plane),
 -- 
-2.11.0
+2.20.1
 

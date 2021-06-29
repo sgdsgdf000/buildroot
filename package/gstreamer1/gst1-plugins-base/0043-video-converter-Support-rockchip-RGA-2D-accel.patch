@@ -1,36 +1,30 @@
-From dbbaf2baf951043acce6e62570178b2cb712f291 Mon Sep 17 00:00:00 2001
+From 96bdda80e6131d9c7dd2ab732bfb5ddba1dd4d34 Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Thu, 31 Oct 2019 18:45:19 +0800
-Subject: [PATCH] video-converter: Support rockchip RGA 2D accel
+Subject: [PATCH 43/45] video-converter: Support rockchip RGA 2D accel
 
 Disabled by default, set env GST_VIDEO_CONVERT_USE_RGA=1 to enable.
 
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- configure.ac                         |  12 ++
+ configure.ac                         |   6 +
  gst-libs/gst/video/Makefile.am       |   2 +-
  gst-libs/gst/video/video-converter.c | 183 +++++++++++++++++++++++++++
- 3 files changed, 196 insertions(+), 1 deletion(-)
+ 3 files changed, 190 insertions(+), 1 deletion(-)
 
 diff --git a/configure.ac b/configure.ac
-index 1287583..3183b1e 100644
+index 1287583..7804f3b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -310,6 +310,18 @@ PKG_CHECK_MODULES(G_UDEV, gudev-1.0 , [
+@@ -310,6 +310,12 @@ PKG_CHECK_MODULES(G_UDEV, gudev-1.0 , [
  
  AG_GST_GL_CHECKS
  
 +dnl check for rockchip RGA
-+RGA_LIBS=
-+RGA_HEADER=
-+
-+AC_CHECK_LIB([rga], [c_RkRgaInit], RGA_LIBS="-lrga")
-+AC_CHECK_HEADERS([rga/RgaApi.h], RGA_HEADER="yes")
-+
-+if test "x$RGA_LIBS" != "x" && test "x$RGA_HEADER" = "xyes"; then
-+  AC_SUBST(RGA_LIBS)
-+  AC_DEFINE(HAVE_RGA, 1, [Have rockchip RGA])
-+fi
++PKG_CHECK_MODULES(RGA, [librga], [enable_rga=yes], [enable_rga=no])
++AM_CONDITIONAL(HAVE_RGA, test "x$enable_rga" = xyes)
++AC_SUBST(RGA_CFLAGS)
++AC_SUBST(RGA_LIBS)
 +
  dnl GTK is optional and only used in examples
  HAVE_GTK=no
@@ -49,7 +43,7 @@ index 9fc1ccf..5006854 100644
  
  include $(top_srcdir)/common/gst-glib-gen.mak
 diff --git a/gst-libs/gst/video/video-converter.c b/gst-libs/gst/video/video-converter.c
-index e2cb3d5..e053754 100644
+index 147ca0b..7becd9f 100644
 --- a/gst-libs/gst/video/video-converter.c
 +++ b/gst-libs/gst/video/video-converter.c
 @@ -37,6 +37,11 @@
@@ -102,7 +96,7 @@ index e2cb3d5..e053754 100644
 +      return RK_FORMAT_YCrCb_422_SP;
 +    case GST_VIDEO_FORMAT_Y42B:
 +      return RK_FORMAT_YCbCr_422_P;
-+    case GST_VIDEO_FORMAT_P010_10LE:
++    case GST_VIDEO_FORMAT_NV12_10LE40:
 +      return RK_FORMAT_YCbCr_420_SP_10B;
 +    default:
 +      return RK_FORMAT_UNKNOWN;

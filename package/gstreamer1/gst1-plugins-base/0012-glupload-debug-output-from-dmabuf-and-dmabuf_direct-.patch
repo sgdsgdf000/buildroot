@@ -1,4 +1,4 @@
-From 4f9a9dbf297d370fb5835cca36ccbdf164dd3f12 Mon Sep 17 00:00:00 2001
+From b49feb3f7dd14ff51e3f1f3efa016a78f18db47e Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Wed, 17 Oct 2018 17:09:26 +0200
 Subject: [PATCH 12/45] glupload: debug output from dmabuf and dmabuf_direct
@@ -12,7 +12,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 8 insertions(+)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 8a45d0f870..bbe375fb88 100644
+index 8a45d0f..bbe375f 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -518,6 +518,7 @@ static GstCaps *
@@ -52,5 +52,5 @@ index 8a45d0f870..bbe375fb88 100644
  }
  
 -- 
-2.11.0
+2.20.1
 

@@ -1,4 +1,4 @@
-From ef7a81977d76ff520c9d2c6d25a6a0383a988fde Mon Sep 17 00:00:00 2001
+From c09d392d66d13e811dffff955b937702b98fb190 Mon Sep 17 00:00:00 2001
 From: Seungha Yang <seungha.yang@navercorp.com>
 Date: Fri, 8 Feb 2019 21:38:04 +0900
 Subject: [PATCH 26/45] glupload: Don't leak caps features
@@ -12,7 +12,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 70259ce66f..8a63a2cbb2 100644
+index 70259ce..8a63a2c 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -520,9 +520,7 @@ _dma_buf_upload_transform_caps (gpointer impl, GstGLContext * context,
@@ -37,5 +37,5 @@ index 70259ce66f..8a63a2cbb2 100644
      GstCaps *tmp;
  
 -- 
-2.11.0
+2.20.1
 

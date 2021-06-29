@@ -1,4 +1,4 @@
-From 350318916004cc6f828e76de6889df07394caa3a Mon Sep 17 00:00:00 2001
+From 551c33c85de31d7fcda811576708066bd6d70adf Mon Sep 17 00:00:00 2001
 From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
 Date: Sat, 1 Dec 2018 20:30:16 -0500
 Subject: [PATCH 22/45] gl: window-gbm: Remove unneeded extra function
@@ -9,11 +9,11 @@ calling that function. This indirection didn't make much sense.
 (cherry picked from commit 6f7fbbfa71914fe99830c716b0e8254bb9047cfe)
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
- gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c | 27 +++++++++------------------
+ gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c | 27 ++++++++---------------
  1 file changed, 9 insertions(+), 18 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
-index b0eb258d63..1678fa28a4 100644
+index b0eb258..1678fa2 100644
 --- a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 +++ b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 @@ -50,8 +50,6 @@ static void gst_gl_window_gbm_egl_close (GstGLWindow * window);
@@ -65,5 +65,5 @@ index b0eb258d63..1678fa28a4 100644
  GstGLWindowGBMEGL *
  gst_gl_window_gbm_egl_new (GstGLDisplay * display)
 -- 
-2.11.0
+2.20.1
 

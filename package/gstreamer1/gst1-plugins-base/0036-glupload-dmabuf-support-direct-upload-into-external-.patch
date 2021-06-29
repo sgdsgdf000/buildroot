@@ -1,4 +1,4 @@
-From 8eeba3bd5eda666a7c514873008635390cf9345b Mon Sep 17 00:00:00 2001
+From 5f02650f9016df4b774a078c300ea6db4475d037 Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Wed, 12 Feb 2020 18:25:54 +0100
 Subject: [PATCH 36/45] glupload: dmabuf: support direct upload into
@@ -18,7 +18,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 12 insertions(+), 5 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gstglupload.c b/gst-libs/gst/gl/gstglupload.c
-index 5bd81b302d..41df399326 100644
+index 5bd81b3..41df399 100644
 --- a/gst-libs/gst/gl/gstglupload.c
 +++ b/gst-libs/gst/gl/gstglupload.c
 @@ -496,6 +496,7 @@ struct DmabufUpload
@@ -87,5 +87,5 @@ index 5bd81b302d..41df399326 100644
      ret = tmp;
    } else {
 -- 
-2.11.0
+2.20.1
 

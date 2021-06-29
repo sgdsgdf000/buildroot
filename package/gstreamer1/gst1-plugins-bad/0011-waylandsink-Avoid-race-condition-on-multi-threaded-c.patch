@@ -1,7 +1,7 @@
-From ee367b4a4c6a11eff8f71c96b502ace3c6fcee08 Mon Sep 17 00:00:00 2001
+From d5ecfbc03bf14b50a44dc19ee50a1715ac7c215d Mon Sep 17 00:00:00 2001
 From: Wonchul Lee <w.lee@lge.com>
 Date: Mon, 3 Dec 2018 16:18:32 +0900
-Subject: [PATCH 11/60] waylandsink: Avoid race condition on multi-threaded
+Subject: [PATCH 11/68] waylandsink: Avoid race condition on multi-threaded
  client
 
 When waylandsink is used on some other thread than the main wayland
@@ -26,7 +26,7 @@ wrappper which can help to avoid this race condition.
  5 files changed, 37 insertions(+), 54 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 943412cfb..e41591284 100644
+index 943412c..e415912 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1319,7 +1319,7 @@ dnl **** Wayland ****
@@ -39,7 +39,7 @@ index 943412cfb..e41591284 100644
        HAVE_WAYLAND="yes"
        AC_SUBST(WAYLAND_PROTOCOLS_DATADIR, `$PKG_CONFIG --variable=pkgdatadir wayland-protocols`)
 diff --git a/ext/wayland/wldisplay.c b/ext/wayland/wldisplay.c
-index 90a57fbf8..cf7036167 100644
+index 90a57fb..cf70361 100644
 --- a/ext/wayland/wldisplay.c
 +++ b/ext/wayland/wldisplay.c
 @@ -102,6 +102,9 @@ gst_wl_display_finalize (GObject * gobject)
@@ -126,7 +126,7 @@ index 90a57fbf8..cf7036167 100644
            "Error communicating with the wayland display");
        g_object_unref (self);
 diff --git a/ext/wayland/wldisplay.h b/ext/wayland/wldisplay.h
-index 5bab5edcd..89bedee5a 100644
+index 5bab5ed..89bedee 100644
 --- a/ext/wayland/wldisplay.h
 +++ b/ext/wayland/wldisplay.h
 @@ -46,6 +46,7 @@ struct _GstWlDisplay
@@ -138,7 +138,7 @@ index 5bab5edcd..89bedee5a 100644
  
    /* globals */
 diff --git a/ext/wayland/wlwindow.c b/ext/wayland/wlwindow.c
-index 0c2e92937..e1efb75ed 100644
+index 0c2e929..e1efb75 100644
 --- a/ext/wayland/wlwindow.c
 +++ b/ext/wayland/wlwindow.c
 @@ -92,6 +92,7 @@ gst_wl_window_finalize (GObject * gobject)
@@ -243,7 +243,7 @@ index 0c2e92937..e1efb75ed 100644
    if (window->video_width != 0)
      wl_subsurface_set_desync (window->video_subsurface);
 diff --git a/ext/wayland/wlwindow.h b/ext/wayland/wlwindow.h
-index 10b49fd67..547ed55e0 100644
+index 10b49fd..547ed55 100644
 --- a/ext/wayland/wlwindow.h
 +++ b/ext/wayland/wlwindow.h
 @@ -45,9 +45,11 @@ struct _GstWlWindow

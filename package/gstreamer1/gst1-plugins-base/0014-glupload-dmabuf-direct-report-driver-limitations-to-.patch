@@ -1,4 +1,4 @@
-From f61c1c8b1f7f03adcbc44e0f23ac5fcca70be62f Mon Sep 17 00:00:00 2001
+From 0a22ba2512ee7ce87cc06d9f581f574ca72c3e69 Mon Sep 17 00:00:00 2001
 From: Philipp Zabel <p.zabel@pengutronix.de>
 Date: Wed, 17 Oct 2018 17:22:10 +0200
 Subject: [PATCH 14/45] glupload: dmabuf-direct: report driver limitations to
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  1 file changed, 14 insertions(+), 2 deletions(-)
 
 diff --git a/gst-libs/gst/gl/egl/gsteglimage.c b/gst-libs/gst/gl/egl/gsteglimage.c
-index 476166351a..16a9136502 100644
+index 4761663..16a9136 100644
 --- a/gst-libs/gst/gl/egl/gsteglimage.c
 +++ b/gst-libs/gst/gl/egl/gsteglimage.c
 @@ -637,13 +637,19 @@ _gst_egl_image_check_dmabuf_direct (GstGLContext * context, int fourcc)
@@ -60,5 +60,5 @@ index 476166351a..16a9136502 100644
    g_free (external_only);
    return FALSE;
 -- 
-2.11.0
+2.20.1
 

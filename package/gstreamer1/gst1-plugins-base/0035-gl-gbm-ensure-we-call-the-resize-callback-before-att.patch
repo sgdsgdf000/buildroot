@@ -1,4 +1,4 @@
-From 46c7af79009e5ad712d20500b45b2840b647bb05 Mon Sep 17 00:00:00 2001
+From 26e8a915b983c3e0b27f40761a64dcfb309e1c9d Mon Sep 17 00:00:00 2001
 From: Matthew Waters <matthew@centricular.com>
 Date: Mon, 4 Nov 2019 00:38:18 +1100
 Subject: [PATCH 35/45] gl/gbm: ensure we call the resize callback before
@@ -15,7 +15,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  2 files changed, 15 insertions(+), 4 deletions(-)
 
 diff --git a/ext/gl/gstglimagesink.c b/ext/gl/gstglimagesink.c
-index 0de3e5feae..a49d34578b 100644
+index 0de3e5f..a49d345 100644
 --- a/ext/gl/gstglimagesink.c
 +++ b/ext/gl/gstglimagesink.c
 @@ -2223,9 +2223,13 @@ gst_glimage_sink_on_draw (GstGLImageSink * gl_sink)
@@ -34,7 +34,7 @@ index 0de3e5feae..a49d34578b 100644
    sample = gst_sample_new (gl_sink->stored_buffer[0],
        gl_sink->out_caps, &GST_BASE_SINK (gl_sink)->segment, NULL);
 diff --git a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
-index 6f4a844cf0..7067b204a4 100644
+index 6f4a844..7067b20 100644
 --- a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 +++ b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.c
 @@ -51,7 +51,6 @@ static void gst_gl_window_gbm_egl_draw (GstGLWindow * window);
@@ -80,5 +80,5 @@ index 6f4a844cf0..7067b204a4 100644
  GstGLWindowGBMEGL *
  gst_gl_window_gbm_egl_new (GstGLDisplay * display)
 -- 
-2.11.0
+2.20.1
 

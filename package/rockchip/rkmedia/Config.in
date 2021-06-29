@@ -73,20 +73,20 @@ endif # BR2_PACKAGE_RKMEDIA_ALSA
 
 config BR2_PACKAGE_RKMEDIA_AUDIO_CODEC
     bool "audio encoder and decoder"
-    select BR2_PACKAGE_FFMPEG
+    select BR2_PACKAGE_RKAUDIO
     help
-      wrapped function of ffmpeg audio codec
+      wrapped function of rkaudio codec
 
 if BR2_PACKAGE_RKMEDIA_AUDIO_CODEC
 config BR2_PACKAGE_RKMEDIA_AUDIO_ENCODER
     bool "audio encoder"
     help
-      wrapped function of ffmpeg audio encoder
+      wrapped function of rkaudio encoder
 
 config BR2_PACKAGE_RKMEDIA_AUDIO_DECODER
     bool "audio decoder"
     help
-      wrapped function of ffmpeg audio decoder
+      wrapped function of rkaudio decoder
 endif #BR2_PACKAGE_RKMEDIA_AUDIO_CODEC
 
 config BR2_PACKAGE_RKMEDIA_RKRGA

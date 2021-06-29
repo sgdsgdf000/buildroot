@@ -1,4 +1,4 @@
-From 8b033969d4891c7d3f927696fe1ebf3946b3fb6c Mon Sep 17 00:00:00 2001
+From 87b2015efa0c241ba66c28cf851b5c0bf8d1687b Mon Sep 17 00:00:00 2001
 From: Maciej Wolny <maciej.wolny@codethink.co.uk>
 Date: Mon, 19 Nov 2018 15:09:25 +0000
 Subject: [PATCH 19/45] gst-gl: Remove duplicate declarations
@@ -14,7 +14,7 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  3 files changed, 3 insertions(+), 6 deletions(-)
 
 diff --git a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.h b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.h
-index 3d132a24b1..e89af2f537 100644
+index 3d132a2..e89af2f 100644
 --- a/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.h
 +++ b/gst-libs/gst/gl/gbm/gstglwindow_gbm_egl.h
 @@ -24,6 +24,7 @@
@@ -35,7 +35,7 @@ index 3d132a24b1..e89af2f537 100644
    /*< private >*/
    GstGLWindow parent;
 diff --git a/gst-libs/gst/gl/gstgldebug.h b/gst-libs/gst/gl/gstgldebug.h
-index 99e6ce225b..2daff7a641 100644
+index 99e6ce2..2daff7a 100644
 --- a/gst-libs/gst/gl/gstgldebug.h
 +++ b/gst-libs/gst/gl/gstgldebug.h
 @@ -25,8 +25,6 @@
@@ -48,7 +48,7 @@ index 99e6ce225b..2daff7a641 100644
  
  /**
 diff --git a/gst-libs/gst/gl/gstglfuncs.h b/gst-libs/gst/gl/gstglfuncs.h
-index 805abcf3df..e3bf8746d1 100644
+index 805abcf..e3bf874 100644
 --- a/gst-libs/gst/gl/gstglfuncs.h
 +++ b/gst-libs/gst/gl/gstglfuncs.h
 @@ -93,11 +93,11 @@ G_BEGIN_DECLS
@@ -66,5 +66,5 @@ index 805abcf3df..e3bf8746d1 100644
  #undef GST_GL_EXT_BEGIN
  #undef GST_GL_EXT_FUNCTION
 -- 
-2.11.0
+2.20.1
 
