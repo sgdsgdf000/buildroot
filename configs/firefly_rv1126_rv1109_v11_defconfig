@@ -8,8 +8,10 @@
 #include "video_mpp.config"
 #include "rv1126_rv1109_arm.config"
 #include "ubifs.config"
+#include "camera.config"
+#include "updateEngine.config"
 BR2_ROOTFS_OVERLAY="board/rockchip/rv1126_rv1109/fs-overlay-sysv/"
-BR2_PACKAGE_RKWIFIBT_AP6236=y
+BR2_PACKAGE_RKWIFIBT_AP6256=y
 BR2_PACKAGE_RKWIFIBT_BTUART="ttyS0"
 BR2_PACKAGE_RKMEDIA_V4L2_CAPTURE=y
 BR2_PACKAGE_RKMEDIA_USE_AIQ=y
@@ -52,11 +54,11 @@ BR2_PACKAGE_ISP2_IPC_DBUS=y
 BR2_PACKAGE_ISP2_IPC_DBSERVER=y
 BR2_PACKAGE_ISP2_IPC_MINILOGGER=y
 BR2_PACKAGE_PCBA_ADB_TEST=y
-BR2_PACKAGE_FFMPEG_ENCODERS="mp2 adpcm_g726 pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video aac"
-BR2_PACKAGE_FFMPEG_DECODERS="pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video aac"
+BR2_PACKAGE_FFMPEG_ENCODERS="mp2 adpcm_g726 pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video"
+BR2_PACKAGE_FFMPEG_DECODERS="pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video"
 BR2_PACKAGE_FFMPEG_MUXERS="pcm_alaw pcm_mulaw g722 g726 adts rawvideo mjpeg mp4 mov rtp flv f4v mpegts matroska avi rtsp mpeg1system"
 BR2_PACKAGE_FFMPEG_DEMUXERS="pcm_alaw pcm_mulaw g722 g726 rawvideo mpegts mov flv matroska avi"
-BR2_PACKAGE_FFMPEG_PARSERS="aac"
+BR2_PACKAGE_FFMPEG_PARSERS=""
 BR2_PACKAGE_FFMPEG_BSFS="aac_adtstoasc h264_metadata h264_mp4toannexb h264_redundant_pps hevc_metadata hevc_mp4toannexb dump_extradata remove_extradata"
 BR2_PACKAGE_FFMPEG_PROTOCOLS="file rtp srtp rtmp rtmps http https"
 BR2_PACKAGE_FFMPEG_FILTERS="scale"
@@ -67,8 +69,6 @@ BR2_PACKAGE_SQLITE_ENABLE_FTS3=y
 BR2_PACKAGE_SQLITE_ENABLE_JSON1=y
 BR2_PACKAGE_SQLITE_ENABLE_UNLOCK_NOTIFY=y
 BR2_PACKAGE_SQLITE_SECURE_DELETE=y
-BR2_PACKAGE_LIBV4L=y
-BR2_PACKAGE_LIBV4L_UTILS=y
 BR2_PACKAGE_AVAHI=y
 BR2_PACKAGE_AVAHI_DAEMON=y
 BR2_PACKAGE_AVAHI_LIBDNSSD_COMPATIBILITY=y
@@ -147,9 +147,10 @@ BR2_PACKAGE_LIBCAP_TOOLS=y
 BR2_TARGET_LOCALTIME="Asia/Shanghai"
 BR2_PACKAGE_NTP_NTPDATE=y
 BR2_PACKAGE_NTP=y
-BR2_PACKAGE_RK_OEM_RESOURCE_DIR="$(TOPDIR)/../device/rockchip/oem/oem_ipc"
+BR2_PACKAGE_RK_OEM_RESOURCE_DIR="$(TOPDIR)/../device/rockchip/oem/oem_ipc_firefly"
 BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE="os04a10_CMK-OT1607-FV1_M12-40IRC-4MP-F16.xml ov2718_YT-RV1109-3-V1_M43-4IR-2MP-F2.xml gc2053_YT-RV1109-2-V1_40IR-2MP-F20.xml gc2093_YT-RV1109-2-V1_40IR-2MP-F20.xml"
 BR2_PACKAGE_BLUEZ_TOOLS=y
+BR2_PACKAGE_RKWIFIBT_AP6275S=y
 BR2_PACKAGE_UTIL_LINUX_RFKILL=y
 BR2_PACKAGE_UAC_APP=y
 BR2_PACKAGE_FDK_AAC=y
@@ -157,4 +158,8 @@ BR2_PACKAGE_FFMPEG_NONFREE=y
 BR2_PACKAGE_VO_AACENC=y
 BR2_PACKAGE_LIBAACS=y
 BR2_PACKAGE_RKAIQ_SWITCH_MODE=y
-BR2_PACKAGE_RKWIFIBT_AP6275S=y
+BR2_PACKAGE_LIBCURL=y
+BR2_PACKAGE_FFMPEG_ENCODERS="mp2 adpcm_g726 pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video aac"
+BR2_PACKAGE_FFMPEG_DECODERS="pcm_alaw pcm_mulaw rawvideo mjpeg mpeg2video aac"
+BR2_PACKAGE_FFMPEG_PARSERS="aac"
+
