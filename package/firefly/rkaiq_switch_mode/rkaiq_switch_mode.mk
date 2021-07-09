@@ -15,7 +15,8 @@ define RKAIQ_SWITCH_MODE_INSTALL_TARGET_CMDS
 	
         $(INSTALL) -D -m 0755 $(@D)/rkaiq_switch_mode $(TARGET_DIR)/usr/bin/
         $(INSTALL) -D -m 0755 $(@D)/check_brightness.sh $(TARGET_DIR)/usr/bin/
-        $(INSTALL) -D -m 0755 $(@D)/S99_* $(TARGET_DIR)/etc/init.d/
+        $(INSTALL) -D -m 0755 $(@D)/S49_* $(TARGET_DIR)/etc/init.d/
+        $(INSTALL) -D -m 0755 $(@D)/.ffswitchmode_config $(TARGET_DIR)/etc/init.d/
 endef
 
 $(eval $(generic-package))
