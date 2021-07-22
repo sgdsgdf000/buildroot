@@ -29,6 +29,12 @@ endif
 endif
 endif
 
+ifeq ($(BR2_PACKAGE_RV1126_RV1109),y)
+CAMERA_ENGINE_RKAIQ_CONF_OPTS += -DISP_HW_VERSION=-DISP_HW_V20
+else ifeq ($(BR2_PACKAGE_RK356X),y)
+CAMERA_ENGINE_RKAIQ_CONF_OPTS += -DISP_HW_VERSION=-DISP_HW_V21
+endif
+
 ifeq ($(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_RKISP_DEMO), y)
 CAMERA_ENGINE_RKAIQ_DEPENDENCIES += linux-rga
 endif
@@ -50,7 +56,7 @@ dir=`echo $(1)`; \
 iqfile=`echo $(2)`; \
 if [[ -z "$$iqfile" ]]; then \
 	echo "## conver iqfiles"; \
-	for i in $$dir/*.xml; do \
+	for i in $$dir/*.json; do \
 		echo "### conver iqfiles: $$i"; \
 		$(RKISP_PARSER_HOST_BINARY) $$i; \
 	done; \
@@ -80,13 +86,13 @@ else
 	ifneq ($(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE)),)
 		CAMERA_ENGINE_RKAIQ_IQFILE = $(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE))
 	else
-		CAMERA_ENGINE_RKAIQ_IQFILE = *.xml
+		CAMERA_ENGINE_RKAIQ_IQFILE = */*.json
 	endif
 endif
 
 define INSTALL_FAKE_CAMERA_IQFILE_CMD
        $(INSTALL) -D -m  644 $(@D)/iqfiles/$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_FAKE_CAMERA_IQFILE) \
-                $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/etc/iqfiles/FakeCamera.xml
+                $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/etc/iqfiles/FakeCamera.json
 endef
 ifneq ($(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_FAKE_CAMERA_IQFILE)),)
         CAMERA_ENGINE_RKAIQ_PRE_BUILD_HOOKS += INSTALL_FAKE_CAMERA_IQFILE_CMD
@@ -105,6 +111,7 @@ define CAMERA_ENGINE_RKAIQ_INSTALL_TARGET_CMDS
 	mkdir -p $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/lib/
 	mkdir -p $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/bin/
 	$(TARGET_MAKE_ENV) DESTDIR=$(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR) $(MAKE) -C $($(PKG)_BUILDDIR) install
+	$(INSTALL) -D -m  644 $(@D)/all_lib/Release/librkaiq.so $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/lib/
 	$(foreach iqfile,$(CAMERA_ENGINE_RKAIQ_IQFILE),
 		$(INSTALL) -D -m  644 $(@D)/iqfiles/$(iqfile) \
 		$(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/etc/iqfiles/
