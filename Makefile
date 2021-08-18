@@ -90,6 +90,10 @@ else # umask / $(CURDIR) / $(O)
 all:
 .PHONY: all
 
+# Set ffgo version
+CURDATE = $(shell date +%Y%m%d-%H%M)
+PROJECT_VERSION = "$(shell git describe)"
+
 # Set and export the version string
 export BR2_VERSION := 2018.02-rc3
 # Actual time the release is cut (for reproducible builds)
@@ -760,6 +764,12 @@ endif
 		echo "RK_VERSION=$(RK_VERSION)"; \
 		echo "RK_OTA_HOST=$(RK_OTA_HOST)"; \
 	) >  $(TARGET_DIR)/etc/version
+
+	mkdir -p $(TARGET_DIR)/etc/ffgo
+	( \
+		echo -e "FIREFLY: ${PROJECT_VERSION}"; \
+		echo -e "DATE:\t ${CURDATE}"; \
+	) >  $(TARGET_DIR)/etc/ffgo/ffver
 
 	@$(call MESSAGE,"Sanitizing RPATH in target tree")
 	$(TOPDIR)/support/scripts/fix-rpath target
