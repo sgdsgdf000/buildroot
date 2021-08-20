@@ -14,4 +14,12 @@ config BR2_PACKAGE_IPCWEB_BACKEND_JWT
         help
                 enable jwt in ipcweb backend
 
+config BR2_PACKAGE_IPCWEB_BACKEND_XHLPR
+        bool "use xhlpr ipcweb-ng"
+        default n
+        help
+                enable use xhlpr ipcweb-ng
+
+
+
 endif # BR2_PACKAGE_IPCWEB_BACKEND
