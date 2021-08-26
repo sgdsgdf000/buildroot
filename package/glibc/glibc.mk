@@ -10,11 +10,6 @@ GLIBC_SITE = $(call github,foss-for-synopsys-dwc-arc-processors,glibc,$(GLIBC_VE
 else ifeq ($(BR2_RISCV_32),y)
 GLIBC_VERSION = 06983fe52cfe8e4779035c27e8cc5d2caab31531
 GLIBC_SITE = $(call github,riscv,riscv-glibc,$(GLIBC_VERSION))
-else ifeq ($(BR2_PACKAGE_GLIBC_2_22),y)
-GLIBC_VERSION = 2.22
-GLIBC_SITE = $(BR2_GNU_MIRROR)/libc
-GLIBC_SOURCE = glibc-$(GLIBC_VERSION).tar.xz
-GLIBC_SRC_SUBDIR = .
 else
 # Generate version string using:
 #   git describe --match 'glibc-*' --abbrev=40 origin/release/MAJOR.MINOR/master | cut -d '-' -f 2-
@@ -95,6 +90,12 @@ endif
 GLIBC_MAKE = $(BR2_MAKE)
 GLIBC_CONF_ENV += ac_cv_prog_MAKE="$(BR2_MAKE)"
 
+ifeq ($(BR2_PACKAGE_GLIBC_AUTO_KERNEL_VERSION),y)
+GLIBC_KERNEL_HEADERS_VERSION = $(LINUX_HEADERS_VERSION_REAL)
+else
+GLIBC_KERNEL_HEADERS_VERSION = $(BR2_TOOLCHAIN_HEADERS_AT_LEAST)
+endif
+
 # Even though we use the autotools-package infrastructure, we have to
 # override the default configure commands for several reasons:
 #
@@ -126,7 +127,7 @@ define GLIBC_CONFIGURE_CMDS
 		--disable-profile \
 		--without-gd \
 		--enable-obsolete-rpc \
-		--enable-kernel=$(call qstrip,$(BR2_TOOLCHAIN_HEADERS_AT_LEAST)) \
+		--enable-kernel=$(GLIBC_KERNEL_HEADERS_VERSION) \
 		--disable-experimental-malloc \
 		--with-headers=$(STAGING_DIR)/usr/include)
 	$(GLIBC_ADD_MISSING_STUB_H)
@@ -158,7 +159,7 @@ GLIBC_DEPENDENCIES += host-qemu
 
 define GLIBC_GEN_LD_CACHE
 	mkdir -p $(TARGET_DIR)/etc $(TARGET_DIR)/tmp
-	$(QEMU_USER) $(GLIBC_DIR)/build/elf/ldconfig -r $(TARGET_DIR)
+	$(QEMU_USER) $(GLIBC_DIR)/build/elf/ldconfig -r $(TARGET_DIR) || true
 endef
 
 GLIBC_TARGET_FINALIZE_HOOKS += GLIBC_GEN_LD_CACHE
