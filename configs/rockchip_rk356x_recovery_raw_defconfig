@@ -2,4 +2,7 @@
 #include "base_extra.config"
 #include "recovery.config"
 #include "rk356x_arm64.config"
-BR2_ROOTFS_OVERLAY="board/rockchip/rk356x/fs-overlay-recovery/"
+BR2_ROOTFS_OVERLAY="board/rockchip/common/recovery-raw board/rockchip/rk356x/fs-overlay-recovery/"
+BR2_PACKAGE_GPTFDISK=y
+BR2_PACKAGE_GPTFDISK_SGDISK=y
+BR2_PACKAGE_PARTED=y
