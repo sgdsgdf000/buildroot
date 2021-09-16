@@ -35,7 +35,7 @@ relink_block() {
 				BOOTMEDIA=$(echo ${x} | cut -f 2 -d =)
 			;;
 			storagenode=*)
-				BOOTNODE=$(echo ${x} | sed 's/\///g' | cut -f 2 -d =)
+				BOOTNODE=$(echo ${x} | awk -F '[/]' '{print $NF}')
 				NODENAME=$(echo "$BOOTNODE" | cut -f 1 -d @)
 				NODEADDR=$(echo "$BOOTNODE" | cut -f 2 -d @)
 				BOOTNODE="$NODEADDR.$NODENAME"
@@ -47,10 +47,12 @@ relink_block() {
 		emmc | sd)
 			wait_for_file /dev/mmcblk* 10
 			BOOTDEVICE=$(ls /dev/mmcblk[0-9])
+			device="/dev/mmcblk"
 			;;
 		usb | scsi)
 			wait_for_file /dev/sd* 10
 			BOOTDEVICE=$(ls /dev/sd[a-z])
+			device="/dev/sd"
 			;;
 	esac
 
