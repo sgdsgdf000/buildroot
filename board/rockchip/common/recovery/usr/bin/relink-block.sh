@@ -35,7 +35,7 @@ relink_block() {
 				BOOTMEDIA=$(echo ${x} | cut -f 2 -d =)
 			;;
 			storagenode=*)
-				BOOTNODE=$(echo ${x} | awk -F '[/]' '{print $NF}')
+				BOOTNODE=$(echo ${x} | cut -f 2 -d = | awk -F '[/]' '{print $NF}')
 				NODENAME=$(echo "$BOOTNODE" | cut -f 1 -d @)
 				NODEADDR=$(echo "$BOOTNODE" | cut -f 2 -d @)
 				BOOTNODE="$NODEADDR.$NODENAME"
@@ -53,6 +53,11 @@ relink_block() {
 			wait_for_file /dev/sd* 10
 			BOOTDEVICE=$(ls /dev/sd[a-z])
 			device="/dev/sd"
+			;;
+		nvme)
+			wait_for_file /dev/nvme* 10
+			BOOTDEVICE=$(ls /dev/nvme[0-9])
+			device="/dev/nvme"
 			;;
 	esac
 
