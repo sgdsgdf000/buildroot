@@ -2,7 +2,9 @@
 
 block_name=$1
 device=$(udevadm info --query=path --name=${block_name})
+
 block_num=${device##*[a-zA-Z]}
+block_name="/dev/$(echo ${device} | awk -F'/' '{print $NF}')"
 device="/dev/$(echo ${device} | awk -F'/' '{print $(NF-1)}')"
 
 /usr/sbin/sgdisk -e ${device}
