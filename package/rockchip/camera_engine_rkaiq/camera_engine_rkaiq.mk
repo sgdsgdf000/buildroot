@@ -31,8 +31,10 @@ endif
 
 ifeq ($(BR2_PACKAGE_RV1126_RV1109),y)
 CAMERA_ENGINE_RKAIQ_CONF_OPTS += -DISP_HW_VERSION=-DISP_HW_V20
+CAMERA_ENGINE_RKAIQ_IQFILE_FORMAT=xml
 else ifeq ($(BR2_PACKAGE_RK356X),y)
 CAMERA_ENGINE_RKAIQ_CONF_OPTS += -DISP_HW_VERSION=-DISP_HW_V21
+CAMERA_ENGINE_RKAIQ_IQFILE_FORMAT=json
 endif
 
 ifeq ($(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_RKISP_DEMO), y)
@@ -48,18 +50,14 @@ dir=`echo $(1)`; \
 iqfile=`echo $(2)`; \
 if [[ -z "$$iqfile" ]]; then \
 	echo "## conver iqfiles"; \
-	for i in $$dir/*.json; do \
-		echo "### conver iqfiles: $$i"; \
-		$(RKISP_PARSER_HOST_BINARY) $$i; \
-	done; \
+		for i in $$dir/*.$(CAMERA_ENGINE_RKAIQ_IQFILE_FORMAT); do \
+			echo "### conver iqfiles: $$i"; \
+			$(RKISP_PARSER_HOST_BINARY) $$i; \
+		done; \
 else  \
 	echo "### conver iqfile: $$dir/$$iqfile"; \
 	$(RKISP_PARSER_HOST_BINARY) $$dir/$$iqfile; \
 fi;
-endef
-
-define INSTALL_RKISP_PARSER_M32_CMD
-	$(INSTALL) -D -m  755 $(@D)/rkisp_parser_demo/bin/rkisp_parser_m32   $(HOST_DIR)/bin/rkisp_parser
 endef
 
 define INSTALL_RKISP_PARSER_M64_CMD
@@ -76,11 +74,7 @@ define IQFILES_CONVER_CMD
 	$(call conver_iqfiles, $(@D)/iqfiles)
 endef
 
-	ifeq ($(BR2_arm), y)
-		CAMERA_ENGINE_RKAIQ_PRE_BUILD_HOOKS += INSTALL_RKISP_PARSER_M32_CMD
-	else
-		CAMERA_ENGINE_RKAIQ_PRE_BUILD_HOOKS += INSTALL_RKISP_PARSER_M64_CMD
-	endif
+	CAMERA_ENGINE_RKAIQ_PRE_BUILD_HOOKS += INSTALL_RKISP_PARSER_M64_CMD
 
 	ifneq ($(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE)),)
 		CAMERA_ENGINE_RKAIQ_PRE_BUILD_HOOKS += IQFILE_CONVER_CMD
@@ -92,7 +86,11 @@ else # BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE_USE_BIN
 	ifneq ($(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE)),)
 		CAMERA_ENGINE_RKAIQ_IQFILE = $(call qstrip,$(BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE))
 	else
+		ifeq ($(BR2_PACKAGE_RV1126_RV1109),y)
+		CAMERA_ENGINE_RKAIQ_IQFILE = */*.xml
+		else ifeq ($(BR2_PACKAGE_RK356X),y)
 		CAMERA_ENGINE_RKAIQ_IQFILE = */*.json
+		endif
 	endif
 endif # BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE_USE_BIN
 

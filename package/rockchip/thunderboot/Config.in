@@ -1,6 +1,5 @@
 menuconfig BR2_PACKAGE_THUNDERBOOT
 	bool "rockchip thunderboot"
-	depends on BR2_PACKAGE_RV1126_RV1109
 	help
 	  Rockchip tb(thunder boot) configuration.
 
@@ -43,6 +42,11 @@ config BR2_THUNDERBOOT_SIMPLIFY_USB
 	help
 	  Kernel driver modules to be installed.
 
+config BR2_PACKAGE_THUNDERBOOT_USE_EUDEV
+	bool "enable udev for usb-otg/sdcard/block-byname, etc..."
+	help
+	  enable udev for usb-otg/sdcard/block-byname, etc...
+
 if BR2_THUNDERBOOT_SIMPLIFY_USB
 
 config BR2_THUNDERBOOT_USB_ADBD
@@ -50,6 +54,13 @@ config BR2_THUNDERBOOT_USB_ADBD
 	select BR2_PACKAGE_ANDROID_TOOLS
 	help
 	  Use simplify ADB configuration.
+
+config BR2_THUNDERBOOT_USB_MTP
+	bool "rockchip thunderboot USB MTP"
+	select BR2_PACKAGE_MTP
+	select BR2_PACKAGE_THUNDERBOOT_USE_EUDEV
+	help
+	  Use simplify MTP configuration.
 
 config BR2_THUNDERBOOT_USB_RNDIS
 	bool "rockchip thunderboot USB RNDIS"

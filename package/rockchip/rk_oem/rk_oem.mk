@@ -54,6 +54,7 @@ endef
 define RK_OEM_TARGET_POST_MKIMAGE_HOOK_CMDS
 	echo "#!/bin/sh" > $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
 	echo "set -e" >> $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
+	echo "export TARGET_OUTPUT_DIR=$(BASE_DIR)" >> $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
 	echo "[ -d $(RK_OEM_INSTALL_TARGET_DIR)/www ] && chown -R www-data:www-data $(RK_OEM_INSTALL_TARGET_DIR)/www" >> $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
 	echo "[ -d $(RK_OEM_INSTALL_TARGET_DIR)/usr/www ] && chown -R www-data:www-data $(RK_OEM_INSTALL_TARGET_DIR)/usr/www" >> $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
 	echo "mkdir -p $$(dirname $(RK_OEM_IMAGE_OUTPUT))" >> $(@D)/$(RK_OEM_FAKEROOT_SCRIPT)
@@ -69,6 +70,7 @@ define RK_OEM_TARGET_FINALIZE_STRIP_HOOK_CMDS
 	find $(RK_OEM_INSTALL_TARGET_DIR) -type f \( -perm /111 -o -name '*.so*' \) \
 		-not \( -name 'libpthread*.so*' -o -name 'ld-*.so*' -o -name '*.ko' \) -print0 | \
 		xargs -0 $(STRIPCMD) 2>/dev/null || true
+	touch $(TARGET_DIR)/.auto_mkfs # format userdata partition default if mount error.
 endef
 
 ifneq ($(BR2_ENABLE_DEBUG),y)
@@ -86,13 +88,6 @@ define RK_OEM_TARGET_FINALIZE_MKIMAGE_HOOK_CMDS
 endef
 RK_OEM_TARGET_FINALIZE_HOOKS += RK_OEM_TARGET_FINALIZE_MKIMAGE_HOOK_CMDS
 endif
-
-# reflash itself to make sure it will be built during every build
-define RK_OEM_POST_INSTALL_TARGET_HOOKS_CMDS
-    rm -f $(@D)/.stamp_built
-endef
-
-RK_OEM_POST_INSTALL_TARGET_HOOKS += RK_OEM_POST_INSTALL_TARGET_HOOKS_CMDS
 
 endif
 
