@@ -9,7 +9,6 @@ case "$1" in
 			mkdir /data/cfg/rockchip_test
 			cp /oem/rockchip_test/auto_reboot.sh /data/cfg/rockchip_test
 		fi
-        source /data/cfg/rockchip_test/auto_reboot.sh &
         ;;
   stop)
         printf "stop finished\n"
