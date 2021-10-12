@@ -69,6 +69,7 @@ relink_block() {
 		fi
 	done
 
+	mkdir -p /dev/block/by-name/
 	for x in $(ls ${device}*); do
 		block_name=$(udevadm info --name=${x} | grep "ID_PART_ENTRY_NAME" | cut -f 2 -d =)
 		if [[ -n "$block_name" ]]; then
