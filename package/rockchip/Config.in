@@ -18,10 +18,10 @@ choice
 	default BR2_PACKAGE_RK3308
 	prompt "Rockchip chip support"
 
-config BR2_PACKAGE_ORION
-	bool "ORION chip"
+config BR2_PACKAGE_RK3588
+	bool "RK3588 chip"
 	help
-		Use rockchip's orion chip
+		Use rockchip's rk3588 chip
 
 config BR2_PACKAGE_RV1108
 	bool "RV1108 chip"
@@ -289,4 +289,5 @@ source "package/rockchip/rkiio/Config.in"
 source "package/rockchip/lvgl/Config.in"
 source "package/rockchip/cvr_app/Config.in"
 source "package/rockchip/rkipc/Config.in"
+source "package/rockchip/rkfsmk/Config.in"
 endif
