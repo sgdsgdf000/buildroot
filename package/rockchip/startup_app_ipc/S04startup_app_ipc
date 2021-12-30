@@ -3,7 +3,7 @@
 case "$1" in
 	start)
                 ispserver &
-                startup_app_ipc -d rkispp_scale2 -W 960 -H 540 -w 720 -h 1280 -I 0 &
+                startup_app_ipc -d rkispp_scale2 -W 960 -H 540 -w 800 -h 1280 -I 0 &
                 printf "startup_app_ipc start\n"
 		;;
 	stop)
