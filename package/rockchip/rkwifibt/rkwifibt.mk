@@ -113,6 +113,11 @@ CHIP_NAME = RTL8821CS
 RTK_BT = ENABLE
 endif
 
+ifeq ($(BR2_PACKAGE_RKWIFIBT_RTL8188EU),y)
+CHIP_VENDOR = REALTEK
+CHIP_NAME = RTL8188EU
+endif
+
 ifeq ($(BR2_PACKAGE_RKWIFIBT_COMPATIBLE),y)
 CHIP_VENDOR = ROCKCHIP
 WIFI_KO = *.ko
@@ -200,6 +205,12 @@ define RKWIFIBT_INSTALL_TARGET_CMDS
     $(INSTALL) -D -m 0755 $(@D)/S66load_wifi_modules $(TARGET_DIR)/etc/init.d
 endef
 endif #RTL8189FS
+
+ifeq ($(CHIP_NAME), RTL8188EU)
+define RKWIFIBT_INSTALL_TARGET_CMDS
+    $(INSTALL) -D -m 0755 $(@D)/S66load_wifi_modules $(TARGET_DIR)/etc/init.d
+endef
+endif #RTL8188EU
 
 endif # CHIP_VENDOR
 
