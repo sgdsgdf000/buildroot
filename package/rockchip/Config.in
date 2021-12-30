@@ -88,6 +88,11 @@ config BR2_PACKAGE_RK3036
     help
         Use rockchip's rk3036 chip
 
+config BR2_PACKAGE_DEVICE_EVB
+    bool "DEVICE_EVB"
+    help
+	Use qt 4.0inch and 7.0inch for firefly
+
 endchoice
 
 
