@@ -3,5 +3,6 @@ menuconfig BR2_PACKAGE_FIREFLY
 
 if BR2_PACKAGE_FIREFLY
 source "package/firefly/quectel-CM/Config.in"
+source "package/firefly/iot_client/Config.in"
 
 endif
