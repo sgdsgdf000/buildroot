@@ -25,7 +25,7 @@ case "$1" in
         if busybox cat /sys/class/rkwifi/chip | grep RTL8723DS; then
         killall rtk_hciattach
         fi
-        if busybox cat /sys/class/rkwifi/chip | grep AP6255; then
+        if busybox cat /sys/class/rkwifi/chip | grep AP6236; then
         killall brcm_patchram_plus1
         fi
 
