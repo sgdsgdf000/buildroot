@@ -185,4 +185,6 @@ source "package/rockchip/LinuxAB/Config.in"
 source "package/rockchip/rk_webui/Config.in"
 source "package/rockchip/rtc_demo/Config.in"
 source "package/rockchip/pcba_adb/Config.in"
+source "package/rockchip/rkffplay/Config.in"
+
 endif
