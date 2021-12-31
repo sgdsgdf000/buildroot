@@ -15,12 +15,22 @@ ifeq ($(BR2_PACKAGE_FFMPEG_SWSCALE),y)
 MINIGUI_MAKE_ENV += ENABLE_VIDEO=1
 endif
 
+ifeq ($(BR2_PACKAGE_MINIGUI_DESKTOP_4_INCH),y)
+MINIGUI_MAKE_ENV += ENABLE_4_INCH=1
+SCREEN_SIZE=480x480
+endif
+
+ifeq ($(BR2_PACKAGE_MINIGUI_DESKTOP_7_INCH),y)
+MINIGUI_MAKE_ENV += ENABLE_7_INCH=1
+SCREEN_SIZE=1024x600
+endif
+
 define MINIGUI_DESKTOP_IMAGE_COPY
-        mkdir -p $(TARGET_DIR)/usr/local/share/
-        cp -r $(PROJECT_DIR)/minigui $(TARGET_DIR)/usr/local/share/
-        cp -r $(PROJECT_DIR)/S99minigui_app $(TARGET_DIR)/etc/init.d/S99minigui_app
-        cp -r $(PROJECT_DIR)/minigui/MiniGUI.cfg.$(MINIGUI_TARGET) \
-			  $(TARGET_DIR)/etc/MiniGUI.cfg
+    mkdir -p $(TARGET_DIR)/usr/local/share/
+	cp -r $(PROJECT_DIR)/minigui $(TARGET_DIR)/usr/local/share/
+	cp -r $(PROJECT_DIR)/S99minigui_app $(TARGET_DIR)/etc/init.d/S99minigui_app
+	cp -r $(PROJECT_DIR)/minigui/MiniGUI_$(SCREEN_SIZE).cfg.$(MINIGUI_TARGET) \
+		$(TARGET_DIR)/etc/MiniGUI.cfg
 	$(SED) "s/event0/$(call qstrip,$(BR2_PACKAGE_MINIGUI_RKKEYBOARD_EVENT))/" \
 		$(TARGET_DIR)/etc/MiniGUI.cfg
 endef
@@ -31,7 +41,7 @@ endef
 
 define MINIGUI_DESKTOP_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $($(PKG)_PKGDIR)/61-powersupply.rules $(TARGET_DIR)/lib/udev/rules.d/
-        $(INSTALL) -D -m 755 $(@D)/minigui_desktop $(TARGET_DIR)/usr/bin/ && $(MINIGUI_DESKTOP_IMAGE_COPY)
+	$(INSTALL) -D -m 755 $(@D)/minigui_desktop $(TARGET_DIR)/usr/bin/ && $(MINIGUI_DESKTOP_IMAGE_COPY)
 endef
 
 $(eval $(generic-package))
