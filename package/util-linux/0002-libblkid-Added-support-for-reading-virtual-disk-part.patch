@@ -1,0 +1,108 @@
+From 3cb1736bb7d769feb3eb438530963d8abdabfc97 Mon Sep 17 00:00:00 2001
+From: dengkx <service@t-firefly.com>
+Date: Mon, 10 Jan 2022 09:44:12 +0800
+Subject: [PATCH] libblkid: Added support for reading virtual disk partitions
+
+---
+ libblkid/src/partitions/gpt.c | 78 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 1 deletion(-)
+
+diff --git a/libblkid/src/partitions/gpt.c b/libblkid/src/partitions/gpt.c
+index 52704ed63..c907c0de4 100644
+--- a/libblkid/src/partitions/gpt.c
++++ b/libblkid/src/partitions/gpt.c
+@@ -100,6 +100,79 @@ struct gpt_entry {
+ } __attribute__ ((packed));
+ 
+ 
++#define LINE_BUF_SIZE 512
++#define VIRTUAL_LAB_NAME "virtual_header_lba="
++#define CMDLINE_NAME "/proc/cmdline"
++static int parses_cmdline(uint64_t *partition_lba)
++{
++	int fd, ret = 1, len = 0;
++	char by[32]= {0};
++	int bufsize = LINE_BUF_SIZE;
++	char str1[LINE_BUF_SIZE]= {0};
++
++	fd = open(CMDLINE_NAME, O_RDONLY);
++	if (fd == -1)
++		return 1;
++
++	char *cmdline = malloc(LINE_BUF_SIZE * sizeof(char));
++	if(!cmdline){
++		close(fd);
++		return 1;
++	}
++
++	while(ret)
++	{
++		ret = read(fd,str1,sizeof(str1));
++		memcpy(cmdline + len, str1, sizeof(str1));
++		len += ret;
++		lseek(fd,len,SEEK_SET);
++
++		if (ret != sizeof(str1))
++			break;
++		else {
++			bufsize +=LINE_BUF_SIZE;
++			cmdline = realloc(cmdline, bufsize * sizeof(char));
++			if (!cmdline){
++				close(fd);
++				return 1;
++			}
++		}
++		memset(str1, 0, sizeof(str1));
++	}
++
++	char *rc = strstr(cmdline, VIRTUAL_LAB_NAME);
++	if (!rc){
++		close(fd);
++		free(cmdline);
++		return 1;
++	}
++
++	rc = rc + strlen(VIRTUAL_LAB_NAME);
++	for (int i = 0; i < strlen(rc); i++)
++	{
++		if (rc[i] == ' ')
++			break;
++		by[i]=rc[i];
++	}
++
++	*partition_lba = strtoll(by, NULL, 10);
++
++	close(fd);
++	free(cmdline);
++	return 0;
++}
++
++static unsigned long long choose_partition_lba(void)
++{
++	static uint64_t partition_lba;
++
++	if (partition_lba)
++		return partition_lba;
++	partition_lba = 1;
++	parses_cmdline(&partition_lba);
++	return partition_lba;
++}
++
+ /*
+  * EFI uses crc32 with ~0 seed and xor's with ~0 at the end.
+  */
+@@ -325,7 +398,10 @@ static int probe_gpt_pt(blkid_probe pr,
+ 		goto nothing;
+ 
+ 	errno = 0;
+-	h = get_gpt_header(pr, &hdr, &e, (lba = GPT_PRIMARY_LBA), lastlba);
++	h = get_gpt_header(pr, &hdr, &e, (lba = choose_partition_lba()), lastlba);
++	if (!h)
++		h = get_gpt_header(pr, &hdr, &e, (lba = GPT_PRIMARY_LBA), lastlba);
++
+ 	if (!h && !errno)
+ 		h = get_gpt_header(pr, &hdr, &e, (lba = lastlba), lastlba);
+ 
+-- 
+2.25.1
+

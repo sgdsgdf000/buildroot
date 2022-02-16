@@ -7,10 +7,13 @@ block_num=${device##*[a-zA-Z]}
 block_name="/dev/$(echo ${device} | awk -F'/' '{print $NF}')"
 device="/dev/$(echo ${device} | awk -F'/' '{print $(NF-1)}')"
 
+cat /proc/cmdline |grep -q "virtual_header_lba"
+if [[ $? != 0 ]]; then
 /usr/sbin/sgdisk -e ${device}
 /usr/sbin/parted ${device} <<EOF
 resizepart ${block_num} -34s
 q
 EOF
+fi
 /sbin/mke2fs -t ext4 -b 4096 -O ^huge_file -m 0 -q -F ${block_name}
 /sbin/e2fsck -fy ${block_name}
