@@ -763,6 +763,8 @@ endif
 		echo "RK_MODEL=$(RK_MODEL)"; \
 		echo "RK_VERSION=$(RK_VERSION)"; \
 		echo "RK_OTA_HOST=$(RK_OTA_HOST)"; \
+		echo "LINUX_BUILDROOT_COMMIT=$(shell git log -1 | grep "commit" | awk -F ' ' '{print $$2}')"; \
+		echo "XML_NAME=$(notdir $(realpath ../.repo/manifest.xml))"; \
 	) >  $(TARGET_DIR)/etc/version
 
 	mkdir -p $(TARGET_DIR)/etc/ffgo
