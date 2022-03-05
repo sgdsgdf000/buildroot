@@ -116,10 +116,8 @@ define RKNPU_INSTALL_TARGET_CMDS
 
     if [ x${NPU_ARC} != x ]; then \
         cp -rd $(@D)/npu_arc $(TARGET_DIR)/; \
-        cp $(@D)/npu_arc/S80ARC_NPU_init $(TARGET_DIR)/etc/init.d/; \
     else \
         rm -rf $(TARGET_DIR)/npu_arc; \
-        rm -rf $(TARGET_DIR)/etc/init.d/S80ARC_NPU_init; \
     fi
 endef
 
