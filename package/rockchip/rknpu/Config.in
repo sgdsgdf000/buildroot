@@ -39,3 +39,9 @@ config BR2_PACKAGE_RKNPU_USE_RKNN_API
         depends on BR2_PACKAGE_RKNPU
 	help
 	  "use rknn api"
+
+config BR2_PACKAGE_NPU_ARC
+	bool "use npu 1.6.0 version rknn api"
+        depends on BR2_PACKAGE_RKNPU
+	help
+	  "use npu 1.6.0 version rknn api for arc soft"

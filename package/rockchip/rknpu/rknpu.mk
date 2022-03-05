@@ -66,6 +66,10 @@ ifeq ($(BR2_PACKAGE_RKNPU_USE_RKNN_API), y)
 BUILD_RKNN_API=y
 endif
 
+ifeq ($(BR2_PACKAGE_NPU_ARC),y)
+NPU_ARC = y
+endif
+
 define RKNPU_INSTALL_STAGING_CMDS
     mkdir -p $(STAGING_DIR)/usr/include/rknn
     $(INSTALL) -D -m 0644 $(@D)/rknn/include/rknn_runtime.h $(STAGING_DIR)/usr/include/rknn/rknn_runtime.h
@@ -108,6 +112,14 @@ define RKNPU_INSTALL_TARGET_CMDS
             $(INSTALL) -D -m 0644 $(@D)/$(NPU_RKNN_API_LIB) $(TARGET_DIR)/usr/lib/; \
             $(INSTALL) -D -m 0644 $(@D)/$(NPU_RKNN_API_LIB) $(STAGING_DIR)/usr/lib; \
         fi \
+    fi
+
+    if [ x${NPU_ARC} != x ]; then \
+        cp -rd $(@D)/npu_arc $(TARGET_DIR)/; \
+        cp $(@D)/npu_arc/S80ARC_NPU_init $(TARGET_DIR)/etc/init.d/; \
+    else \
+        rm -rf $(TARGET_DIR)/npu_arc; \
+        rm -rf $(TARGET_DIR)/etc/init.d/S80ARC_NPU_init; \
     fi
 endef
 
