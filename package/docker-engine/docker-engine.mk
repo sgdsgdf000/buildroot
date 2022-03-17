@@ -87,6 +87,11 @@ endef
 
 ifeq ($(BR2_PACKAGE_DOCKER_ENGINE_DAEMON),y)
 
+define DOCKER_ENGINE_INSTALL_INIT_SYSV
+	$(INSTALL) -m 755 -D package/docker-engine/S99docker \
+		$(TARGET_DIR)/etc/init.d/S99docker
+endef
+
 define DOCKER_ENGINE_INSTALL_INIT_SYSTEMD
 	$(INSTALL) -D -m 0644 $(@D)/contrib/init/systemd/docker.service \
 		$(TARGET_DIR)/usr/lib/systemd/system/docker.service
