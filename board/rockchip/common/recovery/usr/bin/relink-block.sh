@@ -28,6 +28,7 @@ relink_block() {
 	local NODEADDR=""
 	local device=""
 	local block_name=""
+	local count=0
 
 	for x in $(cat /proc/cmdline); do
 		case ${x} in
@@ -40,26 +41,34 @@ relink_block() {
 				NODEADDR=$(echo "$BOOTNODE" | cut -f 2 -d @)
 				BOOTNODE="$NODEADDR.$NODENAME"
 			;;
+			virtual_lba_count=*)
+				count=$(echo ${x} | cut -f 2 -d =)
+			;;
 		esac
 	done
 
-	case ${BOOTMEDIA} in
-		emmc | sd)
-			wait_for_file /dev/mmcblk* 10
-			BOOTDEVICE=$(ls /dev/mmcblk[0-9])
-			device="/dev/mmcblk"
-			;;
-		usb | scsi)
-			wait_for_file /dev/sd* 10
-			BOOTDEVICE=$(ls /dev/sd[a-z])
-			device="/dev/sd"
-			;;
-		nvme)
-			wait_for_file /dev/nvme* 10
-			BOOTDEVICE=$(ls /dev/nvme[0-9])
-			device="/dev/nvme"
-			;;
-	esac
+	if [ -e /dev/mmcblkloop ] && [ $count -ne 0 ]; then
+		BOOTDEVICE=$(ls /dev/mmcblkloop*)
+		device="/dev/mmcblkloop"
+	else
+		case ${BOOTMEDIA} in
+			emmc | sd)
+				wait_for_file /dev/mmcblk* 10
+				BOOTDEVICE=$(ls /dev/mmcblk[0-9])
+				device="/dev/mmcblk"
+				;;
+			usb | scsi)
+				wait_for_file /dev/sd* 10
+				BOOTDEVICE=$(ls /dev/sd[a-z])
+				device="/dev/sd"
+				;;
+			nvme)
+				wait_for_file /dev/nvme* 10
+				BOOTDEVICE=$(ls /dev/nvme[0-9])
+				device="/dev/nvme"
+				;;
+		esac
+	fi
 
 	for x in $(echo "$BOOTDEVICE"); do
 		udevadm info --query=path --name=${x} | grep -q "$BOOTNODE"
