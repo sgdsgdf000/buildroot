@@ -33,6 +33,7 @@ resolve_bootdisk() {
 			;;
 		nvme)
 			DEV=/dev/nvme[0-9]n[0-9]
+			BOOTNODE="\.pcie"
 			;;
 	esac
 
