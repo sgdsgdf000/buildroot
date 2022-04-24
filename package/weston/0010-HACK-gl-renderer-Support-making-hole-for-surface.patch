@@ -1,7 +1,7 @@
-From bd0b0b673b05dce3ffe2606fd011d0f133cbf4e9 Mon Sep 17 00:00:00 2001
+From 3f8f50cfe3ead596a81868812eeb5359bf28ccbd Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Tue, 7 Jul 2020 17:00:40 +0800
-Subject: [PATCH 10/55] HACK: gl-renderer: Support making hole for surface
+Subject: [PATCH 10/54] HACK: gl-renderer: Support making hole for surface
 
 Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 ---
@@ -11,10 +11,10 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  3 files changed, 101 insertions(+)
 
 diff --git a/include/libweston/libweston.h b/include/libweston/libweston.h
-index 1f101f2..e3e5258 100644
+index bfa7e36..be2514a 100644
 --- a/include/libweston/libweston.h
 +++ b/include/libweston/libweston.h
-@@ -1476,6 +1476,9 @@ struct weston_surface {
+@@ -1551,6 +1551,9 @@ struct weston_surface {
  	enum weston_hdcp_protection desired_protection;
  	enum weston_hdcp_protection current_protection;
  	enum weston_surface_protection_mode protection_mode;
@@ -25,26 +25,26 @@ index 1f101f2..e3e5258 100644
  
  struct weston_subsurface {
 diff --git a/libweston/compositor.c b/libweston/compositor.c
-index 09f3bb8..a6eda93 100644
+index 2649535..b586f0f 100644
 --- a/libweston/compositor.c
 +++ b/libweston/compositor.c
-@@ -551,6 +551,7 @@ weston_surface_create(struct weston_compositor *compositor)
+@@ -605,6 +605,7 @@ weston_surface_create(struct weston_compositor *compositor)
  	pixman_region32_init(&surface->damage);
  	pixman_region32_init(&surface->opaque);
  	region_init_infinite(&surface->input);
 +	pixman_region32_init(&surface->hole);
  
  	wl_list_init(&surface->views);
- 
-@@ -2182,6 +2183,7 @@ weston_surface_destroy(struct weston_surface *surface)
+ 	wl_list_init(&surface->paint_node_list);
+@@ -2337,6 +2338,7 @@ weston_surface_destroy(struct weston_surface *surface)
  	pixman_region32_fini(&surface->damage);
  	pixman_region32_fini(&surface->opaque);
  	pixman_region32_fini(&surface->input);
 +	pixman_region32_fini(&surface->hole);
  
- 	wl_list_for_each_safe(cb, next, &surface->frame_callback_list, link)
- 		wl_resource_destroy(cb->resource);
-@@ -3237,6 +3239,33 @@ surface_set_opaque_region(struct wl_client *client,
+ 	wl_resource_for_each_safe(cb, next, &surface->frame_callback_list)
+ 		wl_resource_destroy(cb);
+@@ -3515,6 +3517,33 @@ surface_set_opaque_region(struct wl_client *client,
  
  	if (region_resource) {
  		region = wl_resource_get_user_data(region_resource);
@@ -79,11 +79,11 @@ index 09f3bb8..a6eda93 100644
  				     &region->region);
  	} else {
 diff --git a/libweston/renderer-gl/gl-renderer.c b/libweston/renderer-gl/gl-renderer.c
-index 9fb22a6..3840679 100644
+index c7111b2..f0b62d4 100644
 --- a/libweston/renderer-gl/gl-renderer.c
 +++ b/libweston/renderer-gl/gl-renderer.c
-@@ -873,6 +873,46 @@ setup_censor_overrides(struct weston_output *output,
- 	return replaced_shader;
+@@ -1034,6 +1034,46 @@ gl_shader_config_init_for_paint_node(struct gl_shader_config *sconf,
+ 	return true;
  }
  
 +static void
@@ -127,21 +127,21 @@ index 9fb22a6..3840679 100644
 +}
 +
  static void
- draw_view(struct weston_view *ev, struct weston_output *output,
- 	  pixman_region32_t *damage) /* in global coordinates */
-@@ -907,6 +947,35 @@ draw_view(struct weston_view *ev, struct weston_output *output,
- 	if (ensure_surface_buffer_is_ready(gr, gs) < 0)
+ draw_paint_node(struct weston_paint_node *pnode,
+ 		pixman_region32_t *damage /* in global coordinates */)
+@@ -1077,6 +1117,35 @@ draw_paint_node(struct weston_paint_node *pnode,
+ 	if (!gl_shader_config_init_for_paint_node(&sconf, pnode, filter))
  		goto out;
  
 +	// HACK: Make hole for the surface(excluding it's lower subsurface area)
-+	if (pixman_region32_not_empty(&ev->surface->hole)) {
++	if (pixman_region32_not_empty(&pnode->surface->hole)) {
 +		struct weston_subsurface *child;
 +		pixman_region32_t hole, region;
 +
 +		pixman_region32_init(&region);
-+		wl_list_for_each_reverse(child, &ev->surface->subsurface_list,
++		wl_list_for_each_reverse(child, &pnode->surface->subsurface_list,
 +				 parent_link) {
-+			if (child->surface == ev->surface)
++			if (child->surface == pnode->surface)
 +				break;
 +
 +			pixman_region32_union_rect(&region, &region,
@@ -151,20 +151,20 @@ index 9fb22a6..3840679 100644
 +						   child->surface->height);
 +		}
 +
-+		pixman_region32_subtract(&region, &ev->surface->hole, &region);
++		pixman_region32_subtract(&region, &pnode->surface->hole, &region);
 +		pixman_region32_init(&hole);
-+		weston_view_to_global_region(ev, &region, &hole);
++		weston_view_to_global_region(pnode->view, &region, &hole);
 +
 +		pixman_region32_intersect(&hole, &hole, &repaint);
-+		clear_region(ev, &hole);
++		clear_region(pnode->view, &hole);
 +
 +		pixman_region32_fini(&hole);
 +		pixman_region32_fini(&region);
 +	}
 +
- 	replaced_shader = setup_censor_overrides(output, ev);
- 
- 	glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+ 	/* blended region is whole surface minus opaque region: */
+ 	pixman_region32_init_rect(&surface_blend, 0, 0,
+ 				  pnode->surface->width, pnode->surface->height);
 -- 
 2.20.1
 

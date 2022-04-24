@@ -1,7 +1,7 @@
-From 94033fd8643dc73d4233e5fe5352e1614a9b6b23 Mon Sep 17 00:00:00 2001
+From f73a6bd1930b79ccc77f6fa1acb743e15befc32f Mon Sep 17 00:00:00 2001
 From: Jeffy Chen <jeffy.chen@rock-chips.com>
 Date: Thu, 19 Nov 2020 09:41:47 +0800
-Subject: [PATCH 14/55] backend-drm: Support mirror mode
+Subject: [PATCH 14/57] backend-drm: Support mirror mode
 
 Set env "WESTON_DRM_MIRROR" to enable mirror mode, and set env
 "WESTON_DRM_KEEP_RATIO" to keep the aspect ratio.
@@ -12,19 +12,19 @@ Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
  include/libweston/libweston.h         |   2 +
  libweston/backend-drm/drm-gbm.c       |   4 +-
  libweston/backend-drm/drm-internal.h  |  10 +
- libweston/backend-drm/drm.c           | 338 +++++++++++++++++++++++++-
+ libweston/backend-drm/drm.c           | 337 +++++++++++++++++++++++++-
  libweston/backend-drm/meson.build     |   3 +-
  libweston/backend-drm/state-propose.c |  22 +-
  libweston/compositor.c                |   2 +-
  libweston/input.c                     |   7 +
- meson.build                           |   8 +
- 10 files changed, 381 insertions(+), 18 deletions(-)
+ meson.build                           |   5 +
+ 10 files changed, 377 insertions(+), 18 deletions(-)
 
 diff --git a/desktop-shell/shell.c b/desktop-shell/shell.c
-index 0908763..27eb99f 100644
+index 6641f9e..15cf7db 100644
 --- a/desktop-shell/shell.c
 +++ b/desktop-shell/shell.c
-@@ -4319,6 +4319,9 @@ weston_view_set_initial_position(struct weston_view *view,
+@@ -4218,6 +4218,9 @@ weston_view_set_initial_position(struct weston_view *view,
  	}
  
  	wl_list_for_each(output, &compositor->output_list, link) {
@@ -35,10 +35,10 @@ index 0908763..27eb99f 100644
  			target_output = output;
  			break;
 diff --git a/include/libweston/libweston.h b/include/libweston/libweston.h
-index e3e5258..972d23f 100644
+index be2514a..877e31f 100644
 --- a/include/libweston/libweston.h
 +++ b/include/libweston/libweston.h
-@@ -350,6 +350,8 @@ struct weston_output {
+@@ -409,6 +409,8 @@ struct weston_output {
  	 */
  	void (*detach_head)(struct weston_output *output,
  			    struct weston_head *head);
@@ -48,10 +48,10 @@ index e3e5258..972d23f 100644
  
  enum weston_pointer_motion_mask {
 diff --git a/libweston/backend-drm/drm-gbm.c b/libweston/backend-drm/drm-gbm.c
-index 324c2a8..a0ab85e 100644
+index d0a4c6c..d7bd05f 100644
 --- a/libweston/backend-drm/drm-gbm.c
 +++ b/libweston/backend-drm/drm-gbm.c
-@@ -256,8 +256,8 @@ drm_output_fini_egl(struct drm_output *output)
+@@ -265,8 +265,8 @@ drm_output_fini_egl(struct drm_output *output)
  	/* Destroying the GBM surface will destroy all our GBM buffers,
  	 * regardless of refcount. Ensure we destroy them here. */
  	if (!b->shutting_down &&
@@ -59,14 +59,14 @@ index 324c2a8..a0ab85e 100644
 -	    output->scanout_plane->state_cur->fb->type == BUFFER_GBM_SURFACE) {
 +	    output->scanout_plane->state_cur->fb && (output->is_mirror ||
 +	    output->scanout_plane->state_cur->fb->type == BUFFER_GBM_SURFACE)) {
- 		drm_plane_state_free(output->scanout_plane->state_cur, true);
- 		output->scanout_plane->state_cur =
- 			drm_plane_state_alloc(NULL, output->scanout_plane);
+ 		drm_plane_reset_state(output->scanout_plane);
+ 	}
+ 
 diff --git a/libweston/backend-drm/drm-internal.h b/libweston/backend-drm/drm-internal.h
-index f72cd2a..a2bf8a6 100644
+index ce74316..897c5c7 100644
 --- a/libweston/backend-drm/drm-internal.h
 +++ b/libweston/backend-drm/drm-internal.h
-@@ -321,6 +321,8 @@ struct drm_backend {
+@@ -339,6 +339,8 @@ struct drm_backend {
  
  	int virtual_width;
  	int virtual_height;
@@ -75,7 +75,7 @@ index f72cd2a..a2bf8a6 100644
  };
  
  struct drm_mode {
-@@ -545,6 +547,10 @@ struct drm_output {
+@@ -596,6 +598,10 @@ struct drm_output {
  	int current_image;
  	pixman_region32_t previous_damage;
  
@@ -86,7 +86,7 @@ index f72cd2a..a2bf8a6 100644
  	struct vaapi_recorder *recorder;
  	struct wl_listener recorder_frame_listener;
  
-@@ -558,6 +564,10 @@ struct drm_output {
+@@ -609,6 +615,10 @@ struct drm_output {
  
  	/* The dummy framebuffer for SET_CRTC. */
  	struct drm_fb *fb_dummy;
@@ -98,7 +98,7 @@ index f72cd2a..a2bf8a6 100644
  
  static inline struct drm_head *
 diff --git a/libweston/backend-drm/drm.c b/libweston/backend-drm/drm.c
-index a456fb0..ab67e19 100644
+index 19560c5..b0396a9 100644
 --- a/libweston/backend-drm/drm.c
 +++ b/libweston/backend-drm/drm.c
 @@ -66,6 +66,11 @@
@@ -113,7 +113,7 @@ index a456fb0..ab67e19 100644
  static const char default_seat[] = "seat0";
  
  static inline bool
-@@ -83,10 +88,123 @@ drm_head_is_external(struct drm_head *head)
+@@ -84,10 +89,122 @@ drm_head_is_external(struct drm_head *head)
  	}
  };
  
@@ -141,8 +141,7 @@ index a456fb0..ab67e19 100644
 +{
 +	switch (format->bpp) {
 +	case 32:
-+		/* Should be BGRX_8888 */
-+		return RK_FORMAT_RGBX_8888;
++		return RK_FORMAT_BGRX_8888;
 +	case 16:
 +		return RK_FORMAT_RGB_565;
 +	default:
@@ -237,7 +236,7 @@ index a456fb0..ab67e19 100644
  
  	if (!b->primary_head)
  		return;
-@@ -95,18 +213,50 @@ drm_backend_update_outputs(struct drm_backend *b)
+@@ -96,18 +213,50 @@ drm_backend_update_outputs(struct drm_backend *b)
  	if (!primary)
  		return;
  
@@ -288,7 +287,7 @@ index a456fb0..ab67e19 100644
  }
  
  static void
-@@ -395,6 +545,69 @@ drm_output_render_pixman(struct drm_output_state *state,
+@@ -395,6 +544,69 @@ drm_output_render_pixman(struct drm_output_state *state,
  	return drm_fb_ref(output->dumb[output->current_image]);
  }
  
@@ -358,7 +357,7 @@ index a456fb0..ab67e19 100644
  void
  drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
  {
-@@ -406,10 +619,13 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
+@@ -406,10 +618,13 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
  		&scanout_plane->props[WDRM_PLANE_FB_DAMAGE_CLIPS];
  	struct drm_backend *b = to_drm_backend(c);
  	struct drm_mode *mode;
@@ -373,7 +372,7 @@ index a456fb0..ab67e19 100644
  
  	/* If we already have a client buffer promoted to scanout, then we don't
  	 * want to render. */
-@@ -418,6 +634,29 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
+@@ -417,6 +632,29 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
  	if (scanout_state->fb)
  		return;
  
@@ -400,10 +399,10 @@ index a456fb0..ab67e19 100644
 +		goto out;
 +	}
 +
- 	if (!pixman_region32_not_empty(damage) &&
- 	    scanout_plane->state_cur->fb &&
- 	    (scanout_plane->state_cur->fb->type == BUFFER_GBM_SURFACE ||
-@@ -433,24 +672,85 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
+ 	/*
+ 	 * If we don't have any damage on the primary plane, and we already
+ 	 * have a renderer buffer active, we can reuse it; else we pass
+@@ -436,24 +674,85 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
  		fb = drm_output_render_gl(state, damage);
  	}
  
@@ -479,8 +478,8 @@ index a456fb0..ab67e19 100644
  
 -	scanout_state->src_x = 0;
 -	scanout_state->src_y = 0;
--	scanout_state->src_w = output->base.current_mode->width << 16;
--	scanout_state->src_h = output->base.current_mode->height << 16;
+-	scanout_state->src_w = fb->width << 16;
+-	scanout_state->src_h = fb->height << 16;
 +	scanout_state->src_x = sx;
 +	scanout_state->src_y = sy;
 +	scanout_state->src_w = sw << 16;
@@ -498,7 +497,7 @@ index a456fb0..ab67e19 100644
  
  	pixman_region32_subtract(&c->primary_plane.damage,
  				 &c->primary_plane.damage, damage);
-@@ -492,6 +792,12 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
+@@ -502,6 +801,12 @@ drm_output_render(struct drm_output_state *state, pixman_region32_t *damage)
  				  &scanout_state->damage_blob_id);
  
  	pixman_region32_fini(&scanout_damage);
@@ -511,7 +510,7 @@ index a456fb0..ab67e19 100644
  }
  
  static int
-@@ -1346,8 +1652,8 @@ drm_output_fini_pixman(struct drm_output *output)
+@@ -1292,8 +1597,8 @@ drm_output_fini_pixman(struct drm_output *output)
  	/* Destroying the Pixman surface will destroy all our buffers,
  	 * regardless of refcount. Ensure we destroy them here. */
  	if (!b->shutting_down &&
@@ -519,10 +518,10 @@ index a456fb0..ab67e19 100644
 -	    output->scanout_plane->state_cur->fb->type == BUFFER_PIXMAN_DUMB) {
 +	    output->scanout_plane->state_cur->fb && (output->is_mirror ||
 +	    output->scanout_plane->state_cur->fb->type == BUFFER_PIXMAN_DUMB)) {
- 		drm_plane_state_free(output->scanout_plane->state_cur, true);
- 		output->scanout_plane->state_cur =
- 			drm_plane_state_alloc(NULL, output->scanout_plane);
-@@ -1927,6 +2233,8 @@ drm_output_destroy(struct weston_output *base)
+ 		drm_plane_reset_state(output->scanout_plane);
+ 	}
+ 
+@@ -1971,6 +2276,8 @@ drm_output_destroy(struct weston_output *base)
  	assert(!output->state_last);
  	drm_output_state_free(output->state_cur);
  
@@ -531,7 +530,7 @@ index a456fb0..ab67e19 100644
  	free(output);
  }
  
-@@ -3047,6 +3355,12 @@ drm_backend_create(struct weston_compositor *compositor,
+@@ -3212,6 +3519,12 @@ drm_backend_create(struct weston_compositor *compositor,
  	if (buf)
  		sscanf(buf, "%dx%d", &b->virtual_width, &b->virtual_height);
  
@@ -543,9 +542,9 @@ index a456fb0..ab67e19 100644
 +
  	b->state_invalid = true;
  	b->drm.fd = -1;
- 	wl_array_init(&b->unused_crtcs);
+ 
 diff --git a/libweston/backend-drm/meson.build b/libweston/backend-drm/meson.build
-index a7f6296..e199f63 100644
+index 23db912..6dbd05d 100644
 --- a/libweston/backend-drm/meson.build
 +++ b/libweston/backend-drm/meson.build
 @@ -38,7 +38,8 @@ deps_drm = [
@@ -559,10 +558,10 @@ index a7f6296..e199f63 100644
  
  if get_option('renderer-gl')
 diff --git a/libweston/backend-drm/state-propose.c b/libweston/backend-drm/state-propose.c
-index 767c34f..7af5a2f 100644
+index 72e4db9..dc6d6d4 100644
 --- a/libweston/backend-drm/state-propose.c
 +++ b/libweston/backend-drm/state-propose.c
-@@ -53,6 +53,21 @@ static const char *const drm_output_propose_state_mode_as_string[] = {
+@@ -54,6 +54,21 @@ static const char *const drm_output_propose_state_mode_as_string[] = {
  	[DRM_OUTPUT_PROPOSE_STATE_PLANES_ONLY]	= "plane-only state"
  };
  
@@ -584,7 +583,7 @@ index 767c34f..7af5a2f 100644
  static const char *
  drm_propose_state_mode_to_string(enum drm_output_propose_state_mode mode)
  {
-@@ -528,7 +543,7 @@ drm_output_try_view_on_plane(struct drm_plane *plane,
+@@ -466,7 +481,7 @@ drm_output_try_view_on_plane(struct drm_plane *plane,
  
  	switch (plane->type) {
  	case WDRM_PLANE_TYPE_CURSOR:
@@ -593,7 +592,7 @@ index 767c34f..7af5a2f 100644
  			availability = NO_PLANES_ACCEPTED;
  			goto out;
  		}
-@@ -1044,7 +1059,10 @@ drm_assign_planes(struct weston_output *output_base, void *repaint_data)
+@@ -1101,7 +1116,10 @@ drm_assign_planes(struct weston_output *output_base, void *repaint_data)
  	drm_debug(b, "\t[repaint] preparing state for output %s (%lu)\n",
  		  output_base->name, (unsigned long) output_base->id);
  
@@ -606,10 +605,10 @@ index 767c34f..7af5a2f 100644
  		state = drm_output_propose_state(output_base, pending_state, mode);
  		if (!state) {
 diff --git a/libweston/compositor.c b/libweston/compositor.c
-index d9c0657..5bebae4 100644
+index facc10b..380a378 100644
 --- a/libweston/compositor.c
 +++ b/libweston/compositor.c
-@@ -1303,7 +1303,7 @@ weston_view_assign_output(struct weston_view *ev)
+@@ -1411,7 +1411,7 @@ weston_view_assign_output(struct weston_view *ev)
  	mask = 0;
  	pixman_region32_init(&region);
  	wl_list_for_each(output, &ec->output_list, link) {
@@ -619,10 +618,10 @@ index d9c0657..5bebae4 100644
  
  		pixman_region32_intersect(&region, &ev->transform.boundingbox,
 diff --git a/libweston/input.c b/libweston/input.c
-index 28dcb0b..42c961b 100644
+index 6fb4bed..ec7e416 100644
 --- a/libweston/input.c
 +++ b/libweston/input.c
-@@ -1685,6 +1685,10 @@ weston_pointer_clamp(struct weston_pointer *pointer, wl_fixed_t *fx, wl_fixed_t
+@@ -1688,6 +1688,10 @@ weston_pointer_clamp(struct weston_pointer *pointer, wl_fixed_t *fx, wl_fixed_t
  	wl_list_for_each(output, &ec->output_list, link) {
  		if (pointer->seat->output && pointer->seat->output != output)
  			continue;
@@ -633,7 +632,7 @@ index 28dcb0b..42c961b 100644
  		if (pixman_region32_contains_point(&output->region,
  						   x, y, NULL))
  			valid = 1;
-@@ -1754,6 +1758,9 @@ weston_pointer_handle_output_destroy(struct wl_listener *listener, void *data)
+@@ -1757,6 +1761,9 @@ weston_pointer_handle_output_destroy(struct wl_listener *listener, void *data)
  	y = wl_fixed_to_int(pointer->y);
  
  	wl_list_for_each(output, &ec->output_list, link) {
@@ -644,23 +643,20 @@ index 28dcb0b..42c961b 100644
  						   x, y, NULL))
  			return;
 diff --git a/meson.build b/meson.build
-index 82107e1..e5b5359 100644
+index 7b80214..f8ac557 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -134,6 +134,14 @@ if dep_xkbcommon.version().version_compare('>= 0.5.0')
- 	config_h.set('HAVE_XKBCOMMON_COMPOSE', '1')
+@@ -145,6 +145,11 @@ if get_option('deprecated-wl-shell')
+ 	config_h.set('HAVE_DEPRECATED_WL_SHELL', '1')
  endif
  
-+dep_rga = cc.find_library('rga', required : false)
-+if dep_rga.found() and not cc.has_header_symbol('rga/RgaApi.h', 'c_RkRgaInit')
-+	dep_rga = unneeded_dep
-+endif
++dep_rga = dependency('librga', required: false)
 +if dep_rga.found()
 +	config_h.set('HAVE_RGA', '1')
 +endif
 +
- dep_wayland_server = dependency('wayland-server', version: '>= 1.17.0')
- dep_wayland_client = dependency('wayland-client', version: '>= 1.17.0')
+ dep_wayland_server = dependency('wayland-server', version: '>= 1.18.0')
+ dep_wayland_client = dependency('wayland-client', version: '>= 1.18.0')
  dep_pixman = dependency('pixman-1', version: '>= 0.25.2')
 -- 
 2.20.1
