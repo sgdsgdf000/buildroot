@@ -20,6 +20,7 @@ endif
 ifneq ($(findstring y,$(BR2_PACKAGE_RK356X) $(BR2_PACKAGE_RV1126_RV1109) $(BR2_PACKAGE_RK3308)),)
 RK_INSTALL_IO_DOMAIN_SCRIPT:=YES
 endif
+RK_INSTALL_IO_DOMAIN_SCRIPT=NO
 
 define RKSCRIPT_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0644 -D $(@D)/61-partition-init.rules $(TARGET_DIR)/lib/udev/rules.d/
