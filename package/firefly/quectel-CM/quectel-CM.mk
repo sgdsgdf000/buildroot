@@ -7,7 +7,7 @@ define QUECTEL_CM_BUILD_CMDS
 endef
 
 define QUECTEL_CM_INSTALL_TARGET_CMDS
-	$(INSTALL) -m 0755 -D $($(PKG)_BUILDDIR)/S99_quectel-CM $(TARGET_DIR)/etc/init.d
+	$(INSTALL) -m 0755 -D $($(PKG)_BUILDDIR)/77-dongle.rules $(TARGET_DIR)/etc/udev/rules.d/
 	$(INSTALL) -m 0755 -D $($(PKG)_BUILDDIR)/quectel-CM $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0755 -D $($(PKG)_BUILDDIR)/default_quectel-CM.script $(TARGET_DIR)/usr/share/udhcpc/
 endef
