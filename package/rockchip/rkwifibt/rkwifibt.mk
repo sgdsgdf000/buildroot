@@ -132,20 +132,20 @@ RKWIFIBT_BIN_DIR = $(@D)/bin/arm64
 TARGET_ARCH = arm64
 endif
 
-define RKWIFIBT_BUILD_MODULE
-    mkdir -p $(TARGET_DIR)/system/lib/modules/
-    $(TOPDIR)/../build.sh modules
-    find $(TOPDIR)/../kernel/drivers/net/wireless/rockchip_wlan/* -name $(WIFI_KO) | \
-    xargs -n1 -i cp {} $(TARGET_DIR)/system/lib/modules/
-endef
+# define RKWIFIBT_BUILD_MODULE
+#     mkdir -p $(TARGET_DIR)/system/lib/modules/
+#     $(TOPDIR)/../build.sh modules
+#     find $(TOPDIR)/../kernel/drivers/net/wireless/rockchip_wlan/* -name $(WIFI_KO) | \
+#     xargs -n1 -i cp {} $(TARGET_DIR)/system/lib/modules/
+# endef
 
-define RKWIFIBT_INSTALL_MODULE
-    $(SED) "/load wifi modules/a\\  \   insmod \/system\/lib\/modules\/$(WIFI_KO)" \
-        $(TARGET_DIR)/etc/init.d/S66load_wifi_modules
-endef
+# define RKWIFIBT_INSTALL_MODULE
+#     $(SED) "/load wifi modules/a\\  \   insmod \/system\/lib\/modules\/$(WIFI_KO)" \
+#         $(TARGET_DIR)/etc/init.d/S66load_wifi_modules
+# endef
 
-RKWIFIBT_POST_BUILD_HOOKS += RKWIFIBT_BUILD_MODULE
-RKWIFIBT_POST_INSTALL_TARGET_HOOKS+=RKWIFIBT_INSTALL_MODULE
+# RKWIFIBT_POST_BUILD_HOOKS += RKWIFIBT_BUILD_MODULE
+# RKWIFIBT_POST_INSTALL_TARGET_HOOKS+=RKWIFIBT_INSTALL_MODULE
 
 ifeq ($(CHIP_VENDOR), REALTEK)
 ifeq ($(RTK_BT), ENABLE)
