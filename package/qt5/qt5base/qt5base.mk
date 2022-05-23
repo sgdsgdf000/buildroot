@@ -170,9 +170,13 @@ QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_LINUXFB),--enable-linuxfb,-
 QT5BASE_CONFIGURE_OPTS += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),-directfb,-no-directfb)
 QT5BASE_DEPENDENCIES   += $(if $(BR2_PACKAGE_QT5BASE_DIRECTFB),directfb)
 
+ifeq ($(BR2_PACKAGE_LIBXKBCOMMON),y)
+QT5BASE_CONFIGURE_OPTS += -xkbcommon
+QT5BASE_DEPENDENCIES   += libxkbcommon
+endif
+
 ifeq ($(BR2_PACKAGE_QT5BASE_XCB),y)
 QT5BASE_CONFIGURE_OPTS += -xcb
-QT5BASE_CONFIGURE_OPTS += -xkbcommon
 
 QT5BASE_DEPENDENCIES   += \
 	libxcb \
@@ -180,8 +184,7 @@ QT5BASE_DEPENDENCIES   += \
 	xcb-util-image \
 	xcb-util-keysyms \
 	xcb-util-renderutil \
-	xlib_libX11 \
-	libxkbcommon
+	xlib_libX11
 ifeq ($(BR2_PACKAGE_QT5BASE_WIDGETS),y)
 QT5BASE_DEPENDENCIES   += xlib_libXext
 endif
@@ -205,6 +208,15 @@ QT5BASE_CONFIGURE_OPTS += $(if $(QT5BASE_DEFAULT_QPA),-qpa $(QT5BASE_DEFAULT_QPA
 ifeq ($(BR2_PACKAGE_QT5BASE_EGLFS),y)
 QT5BASE_CONFIGURE_OPTS += -eglfs
 QT5BASE_DEPENDENCIES   += libegl
+
+# Avoid conflict with Rockchip BSP kernel's logo.
+define QT5BASE_INSTALL_TARGET_ENV
+	echo "export QT_QPA_EGLFS_ALWAYS_SET_MODE=1" > $(@D)/qt_eglfs.sh
+	$(INSTALL) -D -m 0644 $(@D)/qt_eglfs.sh \
+		$(TARGET_DIR)/etc/profile.d/qt_eglfs.sh
+endef
+QT5BASE_POST_INSTALL_TARGET_HOOKS += QT5BASE_INSTALL_TARGET_ENV
+
 else
 QT5BASE_CONFIGURE_OPTS += -no-eglfs
 endif
