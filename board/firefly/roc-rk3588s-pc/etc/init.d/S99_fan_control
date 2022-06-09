@@ -1,6 +1,6 @@
 case "$1" in
   start)
-	/usr/bin/firefly-fan-init
+	/usr/bin/firefly-fan-init &
         ;;
   stop)
 	killall firefly_fan_control
