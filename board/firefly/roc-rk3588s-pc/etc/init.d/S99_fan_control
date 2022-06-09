@@ -1,0 +1,14 @@
+case "$1" in
+  start)
+	/usr/bin/firefly-fan-init
+        ;;
+  stop)
+	killall firefly_fan_control
+        ;;
+  restart)
+        stop
+        sleep 1
+        start
+        ;;
+esac
+exit 0
