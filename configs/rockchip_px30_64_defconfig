@@ -15,8 +15,6 @@
 #include "wifi.config"
 #include "network.config"
 #include "bt.config"
-#include "qt.config"
-#include "qt_app.config"
 BR2_CCACHE=y
 BR2_TARGET_GENERIC_HOSTNAME="px30_64"
 BR2_TARGET_GENERIC_ISSUE="Welcome to PX30 Buildroot"
@@ -28,3 +26,4 @@ BR2_PACKAGE_DOSFSTOOLS_FSCK_FAT=y
 BR2_PACKAGE_FATRESIZE=y
 BR2_PACKAGE_PARTED=y
 BR2_PACKAGE_PARTED=y
+BR2_PACKAGE_SLT_GPU_LIGHT=y

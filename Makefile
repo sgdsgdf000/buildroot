@@ -759,6 +759,7 @@ endif
 		echo "PRETTY_NAME=\"Buildroot $(BR2_VERSION)\"" \
 	) >  $(TARGET_DIR)/usr/lib/os-release
 	ln -sf ../usr/lib/os-release $(TARGET_DIR)/etc
+
 	( \
 		echo "RK_MODEL=$(RK_MODEL)"; \
 		echo "RK_VERSION=$(RK_VERSION)"; \

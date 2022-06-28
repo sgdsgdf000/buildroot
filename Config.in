@@ -115,7 +115,8 @@ menu "Commands"
 
 config BR2_WGET
 	string "Wget command"
-	default "wget --passive-ftp -nd -t 3"
+	# Allow hosts with old certificates to download over https
+	default "wget --passive-ftp -nd -t 3 --no-check-certificate"
 
 config BR2_SVN
 	string "Subversion (svn) command"
@@ -431,6 +432,19 @@ config BR2_DEBUG_3
 	  macro expansion when you use -g3.
 endchoice
 endif
+
+config BR2_ENABLE_RUNTIME_DEBUG
+	bool "build packages with runtime debugging info"
+	help
+	  Some packages may have runtime assertions, extra traces, and
+	  similar runtime elements that can help debugging. However,
+	  these elements may negatively influence performance so should
+	  normally not be enabled on production systems.
+
+	  Enable this option to enable such runtime debugging.
+
+	  Note: disabling this option is not a guarantee that all
+	  packages effectively removed these runtime debugging elements.
 
 config BR2_STRIP_strip
 	bool "strip target binaries"

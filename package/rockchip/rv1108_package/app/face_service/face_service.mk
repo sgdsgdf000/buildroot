@@ -3,7 +3,7 @@ FACE_SERVICE_SITE_METHOD = local
 FACE_SERVICE_INSTALL_STAGING = YES
 
 # add dependencies
-FACE_SERVICE_DEPENDENCIES = hal adk messenger linux-rga rkfb camerahal rkcamera process_units database
+FACE_SERVICE_DEPENDENCIES = hal adk messenger rockchip-rga rkfb camerahal rkcamera process_units database
 
 # add package dependencies & opts
 ifeq ($(BR2_PACKAGE_SQLITE),y)
@@ -33,17 +33,17 @@ endif
 endif
 
 ifeq ($(BR2_PACKAGE_FACE_SERVICE_USE_UVC),y)
-    FACE_SERVICE_DEPENDENCIES += mpp librkuvc
+    FACE_SERVICE_DEPENDENCIES += rockchip-mpp librkuvc
     FACE_SERVICE_CONF_OPTS += -DUSE_UVC=1
 endif
 
 ifeq ($(BR2_PACKAGE_FACE_SERVICE_USE_MJPEG_CAMERA),y)
-    FACE_SERVICE_DEPENDENCIES += mpp
+    FACE_SERVICE_DEPENDENCIES += rockchip-mpp
     FACE_SERVICE_CONF_OPTS += -DUSE_MJPEG_CAMERA=1
 endif
 
 ifeq ($(BR2_PACKAGE_FACE_SERVICE_FACE_CAPTURE),y)
-    FACE_SERVICE_DEPENDENCIES += mpp rkmedia
+    FACE_SERVICE_DEPENDENCIES += rockchip-mpp rkmedia
     FACE_SERVICE_CONF_OPTS += -DUSE_FACE_CAPTURE=1
 endif
 
