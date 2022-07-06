@@ -211,9 +211,4 @@ endef
 
 WESTON_POST_INSTALL_TARGET_HOOKS += WESTON_INSTALL_TARGET_SCRIPTS
 
-define WESTON_INSTALL_INIT_SYSV
-	$(INSTALL) -D -m 755 $(WESTON_PKGDIR)/S49weston \
-		$(TARGET_DIR)/etc/init.d/S49weston
-endef
-
 $(eval $(meson-package))
