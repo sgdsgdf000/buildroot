@@ -10,6 +10,8 @@
 #include "camera.config"
 #include "updateEngine.config"
 #include "ipc_quick_display.config"
+#include "video_gst.config"
+#include "video_gst_rtsp.config"
 BR2_ROOTFS_OVERLAY="board/rockchip/rv1126_rv1109/fs-overlay-sysv/"
 BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_IQFILE="os04a10_CMK-OT1607-FV1_M12-40IRC-4MP-F16.xml"
 BR2_PACKAGE_CAMERA_ENGINE_RKAIQ_RKISP_DEMO=y
