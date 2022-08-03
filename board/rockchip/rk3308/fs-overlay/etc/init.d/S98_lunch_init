@@ -3,7 +3,7 @@ source /etc/profile.d/RkEnv.sh
 case "$1" in
   start)
         aplay /usr/lib/silence.wav
-        source /oem/RkLunch.sh
+        source /usr/bin/RkLunch.sh
 		#recovery test
 		if [ -e "/oem/rockchip_test/auto_reboot.sh" ]; then
 			mkdir /data/cfg/rockchip_test
