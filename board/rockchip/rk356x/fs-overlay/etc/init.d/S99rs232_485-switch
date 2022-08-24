@@ -1,0 +1,9 @@
+#! /bin/sh
+case "$1" in
+  start)
+    /bin/bash /usr/bin/rs232_485-switch.sh
+    ;;
+  *)
+    ;;
+esac
+exit 0
