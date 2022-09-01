@@ -1,0 +1,3 @@
+ACTION!="add",GOTO="farsight"
+KERNEL=="sd[a-z]",RUN+="/usr/local/bin/firefly-otg-control.sh start"
+LABEL="farsight"
