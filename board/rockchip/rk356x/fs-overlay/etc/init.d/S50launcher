@@ -25,6 +25,7 @@ case "$1" in
 				sleep .1
 			done
 			/usr/bin/QLauncher &
+			echo 0 > /sys/class/graphics/fb0/blank
 		}&
 	;;
   stop)
