@@ -20,12 +20,12 @@ RECOVERY_BUILD_OPTS+=-I$(PROJECT_DIR) -I$(STAGING_DIR)/usr/include/libdrm \
 	-lssl \
 	-lcrypto
 
-ifeq ($(BR2_PACKAGE_RK3308),y)
-	TARGET_MAKE_ENV += RecoveryNoUi=true
-else
-	RECOVERY_BUILD_OPTS += -lz -lpng -ldrm
-	RECOVERY_DEPENDENCIES += libzlib libpng libdrm
-endif
+# ifeq ($(BR2_PACKAGE_RK3308),y)
+# 	TARGET_MAKE_ENV += RecoveryNoUi=true
+# else
+RECOVERY_BUILD_OPTS += -lz -lpng -ldrm
+RECOVERY_DEPENDENCIES += libzlib libpng libdrm
+# endif
 
 ifeq ($(BR2_PACKAGE_RECOVERY_USE_RKUPDATE),y)
 	TARGET_CFLAGS += -DUSE_RKUPDATE=ON
