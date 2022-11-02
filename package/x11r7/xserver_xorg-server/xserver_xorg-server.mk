@@ -4,7 +4,7 @@
 #
 ################################################################################
 
-XSERVER_XORG_SERVER_VERSION = 21.1.4_2022_08_09
+XSERVER_XORG_SERVER_VERSION = 21.1.4_2022_09_29
 XSERVER_XORG_SERVER_SITE = $(call github,JeffyCN,xorg-xserver,$(XSERVER_XORG_SERVER_VERSION))
 XSERVER_XORG_SERVER_LICENSE = MIT
 XSERVER_XORG_SERVER_LICENSE_FILES = COPYING
@@ -39,6 +39,10 @@ XSERVER_XORG_SERVER_DEPENDENCIES = \
 	pixman \
 	mcookie \
 	host-pkgconf
+
+ifeq ($(BR2_PREFER_ROCKCHIP_RGA),y)
+XSERVER_XORG_SERVER_DEPENDENCIES += rockchip-rga
+endif
 
 # We force -O2 regardless of the optimization level chosen by the
 # user, as the X.org server is known to trigger some compiler bugs at
