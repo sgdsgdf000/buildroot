@@ -164,3 +164,7 @@ BR2_PACKAGE_ZBAR=y
 
 # Compatible with old wifi
 BR2_PACKAGE_RKWIFIBT_ALL=y
+
+# ff_export_rootfs_buildroot
+BR2_PACKAGE_RSYNC=y
+BR2_PACKAGE_UTIL_LINUX_BINARIES=y
