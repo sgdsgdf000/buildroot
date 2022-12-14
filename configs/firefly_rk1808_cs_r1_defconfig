@@ -1,0 +1,38 @@
+#include "rk1808_arm64.config"
+#include "base.config"
+#include "base_extra.config"
+#include "debug.config"
+#include "network.config"
+#include "video_mpp.config"
+#include "display.config"
+#include "video_mpp.config"
+#include "video_gst.config"
+#include "video_gst_rtsp.config"
+#include "qt.config"
+BR2_ROOTFS_OVERLAY="board/rockchip/rk1808/fs-overlay-64/ board/rockchip/common/qt board/rockchip/common/firefly"
+BR2_TARGET_GENERIC_HOSTNAME="rk1808"
+BR2_TARGET_GENERIC_ISSUE="Welcome to RK1808 Buildroot"
+BR2_PACKAGE_MULTIVIDEOPLAYER=n
+BR2_PACKAGE_ROCKCHIP_TEST=y
+BR2_PACKAGE_LIBPNG=n
+BR2_PACKAGE_LIBPNG12=y
+BR2_PACKAGE_MINIGUI=y
+BR2_PACKAGE_MINIGUI_ENABLE_RGA=y
+BR2_PACKAGE_MINIGUI_ENABLE_FREETYPE=y
+BR2_PACKAGE_MINIGUI_ENABLE_PNG=y
+BR2_PACKAGE_RKNPU=y
+BR2_PACKAGE_MESA3D=y
+BR2_PACKAGE_MESA3D_GALLIUM_DRIVER_SWRAST=y
+BR2_PACKAGE_MESA3D_OPENGL_EGL=y
+BR2_PACKAGE_MESA3D_OPENGL_ES=y
+BR2_PACKAGE_LIBDRM=y
+BR2_PACKAGE_ROCKX=y
+# BR2_PACKAGE_QT5CONNECTIVITY is not set
+
+# Firefly
+BR2_ROOTFS_OVERLAY="board/rockchip/common/qt board/rockchip/common/firefly board/firefly/cs_r1"
+BR2_TARGET_GENERIC_ROOT_PASSWD="firefly"
+
+# ff_export_rootfs_buildroot
+BR2_PACKAGE_RSYNC=y
+BR2_PACKAGE_UTIL_LINUX_BINARIES=y
