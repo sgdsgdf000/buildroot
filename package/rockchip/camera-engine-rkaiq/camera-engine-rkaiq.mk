@@ -129,7 +129,7 @@ define CAMERA_ENGINE_RKAIQ_INSTALL_CMDS
 	mkdir -p $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/lib/
 	mkdir -p $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/bin/
 	$(TARGET_MAKE_ENV) DESTDIR=$(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR) $(MAKE) -C $($(PKG)_BUILDDIR) install
-	$(INSTALL) -D -m  644 $(@D)/all_lib/MinSizeRel/librkaiq.so $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/lib/
+#	$(INSTALL) -D -m  644 $(@D)/all_lib/MinSizeRel/librkaiq.so $(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/usr/lib/
 	$(foreach iqfile,$(CAMERA_ENGINE_RKAIQ_IQFILE),
 		$(INSTALL) -D -m  644 $(@D)/iqfiles/$(iqfile) \
 		$(CAMERA_ENGINE_RKAIQ_TARGET_INSTALL_DIR)/etc/iqfiles/
