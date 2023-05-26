@@ -3,10 +3,22 @@
 # Start Rockchip recovery for Linux...
 #
 
+rc_file=/tmp/otg_start
+
 case "$1" in
   start)
 	  	touch /dev/.coldboot_done
 		/usr/bin/recovery &
+
+    # firefly OTG: Waiting for OTG upgrade signal.
+    {
+      while [ ! -f $rc_file ]
+      do
+        sleep 1
+      done
+
+      /usr/local/bin/firefly-otg-control.sh start
+    } &
 
 	;;
   stop)
