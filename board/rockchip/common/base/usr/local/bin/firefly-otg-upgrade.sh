@@ -11,7 +11,7 @@ UPGRADE_FW_REBOOT_WAIT_MEDIA="true"
 
 firefly_update_success=0
 
-sleep 5
+sleep 2
 
 log() {
     local format="$1"
@@ -31,6 +31,22 @@ is_recovery() {
 		fi
 	fi
 }
+
+
+is_recovery_factory_reset() {
+	current_os_mode=normal
+	mount | grep "rootfs on / type rootfs"
+	if [ $? = 0 ]; then
+		hexdump -C /dev/block/by-name/misc | grep wipe > /dev/null
+		if [ $? = 0 ]; then
+			current_os_mode=recovery
+			log "Is recovery factory reset, so $0 exit"
+			exit
+		fi
+	fi
+}
+
+
 
 
 run() {
@@ -123,12 +139,24 @@ wait_media_and_reboot(){
 	fi
 }
 
+find_upgrade_point() {
+	if [ "$BOOL_UPGRADE_FW_ENABLE" = "true" ] || [ "$BOOL_UPGRADE_FW_ENABLE" = "1" ]; then
+		mmc_list=$(ls /dev/mmcblk[1-9])
+		for local_mmc in $mmc_list; do
+			ludevinfo=$(udevadm info $local_mmc)
+			if echo $ludevinfo |grep -q storagemedia ; then
+					run export emmc_point_name="$local_mmc"
+			fi
+		done
+	fi
+}
+
 upgrade_fw() {
 	if [ "$BOOL_UPGRADE_FW_ENABLE" = "true" ] || [ "$BOOL_UPGRADE_FW_ENABLE" = "1" ]; then
 		if [ -f $BOARD_DIR/$UPGRADE_DIR/$UPGRADE_FW_NAME ]; then
 			log "[firefly-upgrade]\tUpgrade firmware $BOARD_DIR/$UPGRADE_DIR/$UPGRADE_FW_NAME"
 			log "---------------------- START ----------------------"
-			run export emmc_point_name="/dev/mmcblk0"
+			#run export emmc_point_name="/dev/mmcblk0"
 			if [ "$UPGRADE_FW_WITH_MISC_RECOVERY_IMG" = "true" || "$UPGRADE_FW_WITH_MISC_RECOVERY_IMG" = "1" ]; then
 				log "\n\n\n-----------/usr/bin/rkupdate log_start-----------"
 				run /usr/bin/rkupdate Version\ 1.0 NULL $BOARD_DIR/$UPGRADE_DIR/$UPGRADE_FW_NAME 1 > $DEBUG_CONSOLE
@@ -215,16 +243,16 @@ update_tool()
 		flash_light_start &
 		PID_flash_light=$!
 
-		case ${UPGRADE_SCRIPT_RUN_IN_OS_MODE} in
-			$current_os_mode)
-					# 运行upgrade_script
-					upgrade_script
-					;;
-        esac
+
+		if [ "$UPGRADE_SCRIPT_RUN_IN_OS_MODE" = "$current_os_mode" ]; then
+			# 运行upgrade_script
+			upgrade_script
+		fi
 
 		case ${UPGRADE_FW_RUN_IN_OS_MODE} in
-			$current_os_mode)
+			recovery)
 					# 升级固件
+					find_upgrade_point
 					upgrade_fw
 					;;
         esac
@@ -237,7 +265,7 @@ update_tool()
 	fi
 }
 
-
+is_recovery_factory_reset
 is_recovery
 
 
@@ -246,10 +274,6 @@ if [ ! -d $FIREFLY_MNT ]; then
 fi
 
 for dev in `(ls /dev/sd[a-z][1-9])`; do
-	if [ $firefly_update_success = 1 ]; then
-		wait_media_and_reboot $dev
-	fi
-
 	mount | grep $dev > /dev/null
 	if [ $? = 0 ]; then
 		tmp=`mount | grep $dev| awk -F 'on' '{print $2}'|awk  '{print $1}' `
@@ -263,7 +287,16 @@ for dev in `(ls /dev/sd[a-z][1-9])`; do
 		sleep 1
 		umount $FIREFLY_MNT
 	fi
+
+	if [ $firefly_update_success = 1 ]; then
+		wait_media_and_reboot $dev
+	fi
 done
+
+
+if [ $firefly_update_success = 1 ]; then
+	wait_media_and_reboot $dev
+fi
 
 
 
