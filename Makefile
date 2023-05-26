@@ -32,15 +32,37 @@ SHELL := $(shell if [ -x "$$BASH" ]; then echo $$BASH; \
 	 else if [ -x /bin/bash ]; then echo /bin/bash; \
 	 else echo sh; fi; fi)
 
+O_LATEST := $(CURDIR)/output/latest
+DEFCONFIG = $(firstword $(filter %_defconfig,$(MAKECMDGOALS)))
+
 # Set O variable if not already done on the command line;
 # or avoid confusing packages that can use the O=<dir> syntax for out-of-tree
 # build by preventing it from being forwarded to sub-make calls.
 ifneq ("$(origin O)", "command line")
-ifneq ($(TARGET_OUTPUT_DIR),)
-O := $(TARGET_OUTPUT_DIR)
+ifneq ($(DEFCONFIG),)
+# Set O=output/<board> for defconfig
+O := $(patsubst %_defconfig,$(CURDIR)/output/%,$(DEFCONFIG))
 else
-O := $(CURDIR)/output
+# Prefer BUILDROOT_OUTPUT_DIR env and $(CURDIR)/output/latest symlink
+O := $(BUILDROOT_OUTPUT_DIR)
+O := $(if $(O),$(O),$(realpath $(CURDIR)/output/latest))
 endif
+# Fallback to $(CURDIR)/output
+O := $(if $(O),$(O),$(CURDIR)/output)
+endif
+
+ifneq ($(BUILDROOT_OUTPUT_DIR),)
+ifneq ($(BUILDROOT_OUTPUT_DIR),$(O))
+$(warning "BUILDROOT_OUTPUT_DIR environment unmatched with output dir!")
+$(warning "BUILDROOT_OUTPUT_DIR: $(BUILDROOT_OUTPUT_DIR)")
+$(warning "Output dir: $(O)")
+$(error "Please unset it: unset BUILDROOT_OUTPUT_DIR")
+endif
+endif
+
+ifneq ($(DEFCONFIG),)
+$(shell rm -rf $(O_LATEST); mkdir -p $(CURDIR)/output)
+$(shell ln -rsf $(O) $(O_LATEST))
 endif
 
 # Check if the current Buildroot execution meets all the pre-requisites.
@@ -441,22 +463,8 @@ QUIET := $(if $(findstring s,$(filter-out --%,$(MAKEFLAGS))),-q)
 
 # Strip off the annoying quoting
 ARCH := $(call qstrip,$(BR2_ARCH))
-
-KERNEL_ARCH := $(shell echo "$(ARCH)" | sed -e "s/-.*//" \
-	-e s/i.86/i386/ -e s/sun4u/sparc64/ \
-	-e s/arcle/arc/ \
-	-e s/arceb/arc/ \
-	-e s/arm.*/arm/ -e s/sa110/arm/ \
-	-e s/aarch64.*/arm64/ \
-	-e s/nds32.*/nds32/ \
-	-e s/or1k/openrisc/ \
-	-e s/parisc64/parisc/ \
-	-e s/powerpc64.*/powerpc/ \
-	-e s/ppc.*/powerpc/ -e s/mips.*/mips/ \
-	-e s/riscv.*/riscv/ \
-	-e s/sh.*/sh/ \
-	-e s/s390x/s390/ \
-	-e s/microblazeel/microblaze/)
+NORMALIZED_ARCH := $(call qstrip,$(BR2_NORMALIZED_ARCH))
+KERNEL_ARCH := $(call qstrip,$(BR2_NORMALIZED_ARCH))
 
 ZCAT := $(call qstrip,$(BR2_ZCAT))
 BZCAT := $(call qstrip,$(BR2_BZCAT))
@@ -469,7 +477,13 @@ HOST_DIR = $(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/host,$(call qstrip,$(BR
 TARGET_DIR = $(if $(ROOTFS),$(ROOTFS_$(ROOTFS)_TARGET_DIR),$(if $(PKG),$(PER_PACKAGE_DIR)/$($(PKG)_NAME)/target,$(BASE_TARGET_DIR)))
 else
 HOST_DIR := $(call qstrip,$(BR2_HOST_DIR))
-TARGET_DIR = $(if $(ROOTFS),$(ROOTFS_$(ROOTFS)_TARGET_DIR),$(BASE_TARGET_DIR))
+TARGET_DIR = $(if $(ROOTFS),$(ROOTFS_$(ROOTFS)_TARGET_DIR),$(BASE_TARGET_DIR))$(if $($(PKG)_OEM_INSTALL),/oem)
+
+ifeq ($(BR2_PACKAGE_OEM),y)
+$(eval $(foreach pkg,$(call qstrip,$(BR2_PACKAGE_OEM_PACKAGES)), \
+	$(eval $(call UPPERCASE,$(pkg))_OEM_INSTALL := y)$(sep) \
+	$(eval OEM_DEPENDENCIES += $(pkg))$(sep)))
+endif
 endif
 
 ifneq ($(HOST_DIR),$(BASE_DIR)/host)
@@ -756,13 +770,18 @@ target-finalize: $(PACKAGES) $(TARGET_DIR) host-finalize
 	@$(call MESSAGE,"Finalizing target directory")
 	$(call per-package-rsync,$(sort $(PACKAGES)),target,$(TARGET_DIR))
 	$(foreach hook,$(TARGET_FINALIZE_HOOKS),$($(hook))$(sep))
-	rm -rf $(TARGET_DIR)/usr/include $(TARGET_DIR)/usr/share/aclocal \
-		$(TARGET_DIR)/usr/lib/pkgconfig $(TARGET_DIR)/usr/share/pkgconfig \
+	rm -rf $(TARGET_DIR)/usr/share/aclocal \
 		$(TARGET_DIR)/usr/lib/cmake $(TARGET_DIR)/usr/share/cmake \
 		$(TARGET_DIR)/usr/doc
 	find $(TARGET_DIR)/usr/{lib,share}/ -name '*.cmake' -print0 | xargs -0 rm -f
 	find $(TARGET_DIR)/lib/ $(TARGET_DIR)/usr/lib/ $(TARGET_DIR)/usr/libexec/ \
-		\( -name '*.a' -o -name '*.la' -o -name '*.prl' \) -print0 | xargs -0 rm -f
+		\( -name '*.la' -o -name '*.prl' \) -print0 | xargs -0 rm -f
+ifneq ($(BR2_PACKAGE_GCC_TARGET),y)
+	rm -rf $(TARGET_DIR)/usr/include \
+		$(TARGET_DIR)/usr/lib/pkgconfig $(TARGET_DIR)/usr/share/pkgconfig \
+	find $(TARGET_DIR)/lib/ $(TARGET_DIR)/usr/lib/ $(TARGET_DIR)/usr/libexec/ \
+		-name '*.a' -print0 | xargs -0 rm -f
+endif
 ifneq ($(BR2_PACKAGE_GDB),y)
 	rm -rf $(TARGET_DIR)/usr/share/gdb
 endif
@@ -1040,11 +1059,15 @@ defconfig: $(BUILD_DIR)/buildroot-config/conf outputmakefile
 
 define percent_defconfig
 # Override the BR2_DEFCONFIG from COMMON_CONFIG_ENV with the new defconfig
-%_defconfig: $(BUILD_DIR)/buildroot-config/conf $(1)/configs/%_defconfig outputmakefile
+rockchip_%_defconfig: $(BUILD_DIR)/buildroot-config/conf $(1)/configs/rockchip_%_defconfig outputmakefile
 	$(TOPDIR)/build/parse_defconfig.sh $(1)/configs/$$@ \
 		$(BASE_DIR)/.config.in
 	$$(COMMON_CONFIG_ENV) BR2_DEFCONFIG=$(1)/configs/$$@ \
 		$$< --defconfig=$(BASE_DIR)/.config.in $$(CONFIG_CONFIG_IN)
+
+%_defconfig: $(BUILD_DIR)/buildroot-config/conf $(1)/configs/%_defconfig outputmakefile
+	$$(COMMON_CONFIG_ENV) BR2_DEFCONFIG=$(1)/configs/$$@ \
+		$$< --defconfig=$(1)/configs/$$@ $$(CONFIG_CONFIG_IN)
 endef
 $(eval $(foreach d,$(call reverse,$(TOPDIR) $(BR2_EXTERNAL_DIRS)),$(call percent_defconfig,$(d))$(sep)))
 

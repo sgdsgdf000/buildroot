@@ -53,7 +53,7 @@ endef
 define RKSCRIPT_INSTALL_TARGET_USB_ENV
 	$(INSTALL) -D -m 0644 $(RKSCRIPT_PKGDIR)/usbdevice.sh \
 		$(TARGET_DIR)/etc/profile.d/usbdevice.sh
-$(call usb_env_fixup,USB_FUNCS,$(RKSCRIPT_USB_CONFIG))
+	$(call usb_env_fixup,USB_FUNCS,$(RKSCRIPT_USB_CONFIG))
 endef
 RKSCRIPT_POST_INSTALL_TARGET_HOOKS += RKSCRIPT_INSTALL_TARGET_USB_ENV
 
@@ -181,9 +181,27 @@ define RKSCRIPT_INSTALL_TARGET_UDEV_RULES
 		$(TARGET_DIR)/lib/udev/rules.d/
 	$(INSTALL) -m 0644 -D $(@D)/88-rockchip-camera.rules \
 		$(TARGET_DIR)/lib/udev/rules.d/
+	$(INSTALL) -m 0644 -D $(@D)/99-rockchip-permissions.rules \
+		$(TARGET_DIR)/lib/udev/rules.d/
 endef
 RKSCRIPT_POST_INSTALL_TARGET_HOOKS += RKSCRIPT_INSTALL_TARGET_UDEV_RULES
 endif # UDEV
+
+define RKSCRIPT_INSTALL_TARGET_ASYNC
+	$(INSTALL) -m 0755 -D $(@D)/async-commit $(TARGET_DIR)/usr/bin/
+endef
+RKSCRIPT_POST_INSTALL_TARGET_HOOKS += RKSCRIPT_INSTALL_TARGET_ASYNC
+
+define RKSCRIPT_INSTALL_INIT_SYSV_ASYNC
+	$(INSTALL) -m 0755 -D $(@D)/S10async-commit.sh $(TARGET_DIR)/etc/init.d/
+endef
+RKSCRIPT_INSTALL_INIT_SYSV_HOOKS += RKSCRIPT_INSTALL_INIT_SYSV_ASYNC
+
+define RKSCRIPT_INSTALL_INIT_SYSTEMD_ASYNC
+	$(INSTALL) -D -m 644 $(@D)/async-commit.service \
+		$(TARGET_DIR)/usr/lib/systemd/system/
+endef
+RKSCRIPT_INSTALL_INIT_SYSTEMD_HOOKS += RKSCRIPT_INSTALL_INIT_SYSTEMD_ASYNC
 
 define RKSCRIPT_INSTALL_INIT_SYSV
 	$(INSTALL) -m 0755 -d $(TARGET_DIR)/etc/init.d/

@@ -9,16 +9,16 @@ set -e
 savedefconfig()
 {
 	# Save original .config
-	gzip -fk "$CONFIG"
+	gzip -fk "$CONFIG" &>/dev/null || true
 
 	[ -z "$2" ] || \
 		"$SCRIPT_DIR/parse_defconfig.sh" "$2" "$CONFIG" > /dev/null
 
 	echo "BR2_DEFCONFIG=\"$1\"" >> "$CONFIG"
-	make O="$OUTPUT_DIR" savedefconfig >/dev/null
+	HOSTCC=gcc make O="$OUTPUT_DIR" savedefconfig >/dev/null
 
 	# Restore original .config
-	gunzip -fk "$CONFIG.gz"
+	gunzip -fk "$CONFIG.gz" &>/dev/null || true
 }
 
 BOARD="$(basename "${1%_defconfig}")"
@@ -50,7 +50,7 @@ fi
 echo "Original defconfig saved to $ORIG_DEFCONFIG"
 
 # Generate base defconfig
-grep "^#include " $DEFCONFIG > "$FRAGMENT"
+grep "^#include " $DEFCONFIG > "$FRAGMENT" || true
 savedefconfig "$BASE_DEFCONFIG" "$FRAGMENT"
 echo "Base defconfig saved to $BASE_DEFCONFIG"
 
@@ -62,18 +62,13 @@ SED_STRING_EXP="s/^.*=\"\(.*\)\"/\1/p"
 CFG_LIST=$(diff "$ORIG_DEFCONFIG" "$BASE_DEFCONFIG" | \
 	sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" | sort | uniq)
 
-if [ -z "$CFG_LIST" ]; then
-	echo "Already up-to-date."
-	exit 0
-fi
-
 for CFG in $CFG_LIST ; do
 	BASE_VAL=$(grep -w $CFG "$BASE_DEFCONFIG" || true)
 	ORIG_NEW_VAL=$(grep -w $CFG "$ORIG_DEFCONFIG" || true)
 
 	if [ -z "$ORIG_NEW_VAL" ]; then
 		# Reset to default
-		NEW_VAL="$CFG="
+		NEW_VAL="# $CFG is reset to default"
 	else
 		# Replace
 		NEW_VAL="$ORIG_NEW_VAL"
@@ -111,7 +106,8 @@ savedefconfig "$NEW_DEFCONFIG" "$FRAGMENT"
 CFG_LIST=$(diff "$ORIG_DEFCONFIG" "$NEW_DEFCONFIG" | \
 	sed -n -e "$SED_CONFIG_EXP1" -e "$SED_CONFIG_EXP2" | sort | uniq)
 for CFG in $CFG_LIST ; do
-	grep -q -w $CFG "$FRAGMENT" || echo "$CFG=" >> $FRAGMENT
+	grep -wq $CFG "$FRAGMENT" || \
+		echo "# $CFG is reset to default" >> $FRAGMENT
 done
 
 cat $FRAGMENT > $DEFCONFIG
@@ -120,6 +116,17 @@ cat $FRAGMENT > $DEFCONFIG
 savedefconfig "$NEW_DEFCONFIG" "$DEFCONFIG"
 if diff "$ORIG_DEFCONFIG" "$NEW_DEFCONFIG" | grep ""; then
 	echo "Configs unmatched, might be something wrong."
+	exit 1
 fi
+
+# Strip unneeded config resets
+TEMP_FILE=$(mktemp)
+for CFG in $(grep " is reset to default$" "$DEFCONFIG") ; do
+	grep -wv "$CFG" "$DEFCONFIG" > $TEMP_FILE
+	savedefconfig "$NEW_DEFCONFIG" $TEMP_FILE
+	if ! diff "$ORIG_DEFCONFIG" "$NEW_DEFCONFIG" | grep -q ""; then
+		cat $TEMP_FILE > "$DEFCONFIG"
+	fi
+done
 
 echo "Done updating $DEFCONFIG."

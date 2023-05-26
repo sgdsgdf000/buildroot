@@ -1,3 +1,0 @@
-#include "chips/rk356x_aarch64.config"
-#include "base/base.config"
-#include "vfat.config"
