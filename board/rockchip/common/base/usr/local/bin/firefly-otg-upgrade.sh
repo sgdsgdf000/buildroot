@@ -9,6 +9,11 @@ FIREFLY_MNT="/tmp/mnt"
 DEBUG_CONSOLE="/dev/ttyFIQ0"
 UPGRADE_FW_REBOOT_WAIT_MEDIA="true"
 
+
+if [ "$LED_NODE" = "" ]; then
+	LED_NODE="/sys/class/leds/firefly\:yellow\:user/brightness"
+fi
+
 firefly_update_success=0
 
 sleep 2
@@ -83,12 +88,12 @@ do_with_retry()
 
 yellow_light_on()
 {
-	echo 1 > /sys/class/leds/firefly\:yellow\:user/brightness
+	echo 1 > $LED_NODE
 }
 
 yellow_light_off()
 {
-	echo 0 > /sys/class/leds/firefly\:yellow\:user/brightness
+	echo 0 > $LED_NODE
 }
 
 flash_light_start()
