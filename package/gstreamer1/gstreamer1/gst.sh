@@ -61,6 +61,10 @@ export GST_V4L2SRC_MAX_RESOLUTION=3840x2160
 export GST_VIDEO_CONVERT_USE_RGA=1
 export GST_VIDEO_FLIP_USE_RGA=1
 
+# Disable direct output of NV16 because the GPU does not support it
+export GST_MPP_DEC_DISABLE_NV16_10=1
+unset GST_MPP_NO_RGA
+
 # Default rotation for camerabin2:
 # clockwise(90)|rotate-180|counterclockwise(270)|horizontal-flip|vertical-flip
 # export CAMERA_FLIP=clockwise
