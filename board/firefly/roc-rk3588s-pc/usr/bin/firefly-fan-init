@@ -29,6 +29,9 @@ elif [ "$BOARD_VERSION" == "CS-R1-3399JD4-MAIN" ]; then
 elif [ "$RK3588_BOARD_VERSION" == "ROC-RK3588S-PC" ]; then
 	/usr/bin/firefly_fan_control ROC-RK3588S-PC > /dev/null 2>&1 &
 
+elif [ "$RK3588_BOARD_VERSION" == "CS-A1-N8S-rk3588s-jd4" ]; then
+	/usr/bin/firefly_fan_control CS-A1-N8S-3588S-JD4-MAIN > /dev/null 2>&1 &
+
 elif [ "$RK3588_BOARD_VERSION" == "ITX-3588J" ]; then
 	/usr/bin/firefly_fan_control ITX-3588J > /dev/null 2>&1 &
 
@@ -41,6 +44,8 @@ elif [ "$RK3588_BOARD_VERSION" == "AIO-3588Q" ]; then
 elif [ "$RK3588_BOARD_VERSION" == "AIO-3588MQ" ]; then
 	/usr/bin/firefly_fan_control AIO-3588MQ > /dev/null 2>&1 &
 
+elif [ "$RK3588_BOARD_VERSION" == "AIO-3588SG" ]; then
+	/usr/bin/firefly_fan_control AIO-3588SG > /dev/null 2>&1 &
 
 else
 	exit 0
@@ -50,7 +55,7 @@ while true
 do
 	sleep 0.5
 
-	if [ "$BOARD_VERSION" = "CS-R2-3399JD4-MAIN" ] || [ "$BOARD_VERSION" = "CS-R1-3399JD4-MAIN" ]; then
+	if [ "$BOARD_VERSION" = "CS-R2-3399JD4-MAIN" ] || [ "$BOARD_VERSION" = "CS-R1-3399JD4-MAIN" ] || [ "$RK3588_BOARD_VERSION" = "CS-A1-N8S-rk3588s-jd4" ]; then
 		sleep 2
 		buff=`bmc query 'node_thermal_zone_temp{type="soc-thermal"}' | awk -F=\> '{print $2}' | awk '{print $1}' > /tmp/fan_temperature.xxx`
 		cp /tmp/fan_temperature.xxx /tmp/fan_temperature
